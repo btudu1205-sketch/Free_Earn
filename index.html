@@ -1,344 +1,197 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Rewards Bot Dashboard</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      background-color: #f0f2f5;
-      color: #333;
-      padding-bottom: 75px;
-    }
-    .top-bar {
-      padding: 15px 20px;
-      background-color: #ffffff;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    .top-bar .time {
-      font-weight: bold;
-      color: #555;
-      font-size: 14px;
-    }
-    .top-bar .indicators i {
-      margin-left: 10px;
-      color: #999;
-    }
-    .content {
-      padding: 20px;
-    }
-    .section {
-      padding: 20px;
-      background-color: #fff;
-      margin-bottom: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-      scroll-margin-top: 80px;
-    }
-    .section h2 {
-      font-size: 24px;
-      margin-top: 0;
-      color: #333;
-      border-bottom: 2px solid #f0f2f5;
-      padding-bottom: 15px;
-    }
-    .info-card {
-      background-color: #f9f9f9;
-      border-radius: 8px;
-      padding: 15px;
-      margin-top: 15px;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
-    }
-    .info-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid #e0e0e0;
-      font-size: 16px;
-    }
-    .info-item:last-child {
-      border-bottom: none;
-    }
-    .btn-group {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-top: 20px;
-    }
-    .btn {
-      background-image: linear-gradient(to right, #007bff, #0056b3);
-      color: white;
-      padding: 15px 25px;
-      border: none;
-      cursor: pointer;
-      border-radius: 8px;
-      font-size: 18px;
-      font-weight: 600;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-      transition: all 0.3s ease;
-    }
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
-    }
-    .contact-btn {
-      background-image: linear-gradient(to right, #28a745, #1e7e34);
-      box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
-    }
-    .refer-btn {
-      background-image: linear-gradient(to right, #ffc107, #e0a800);
-      box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3);
-    }
-    .withdraw-btn {
-      background-image: linear-gradient(to right, #dc3545, #bd2130);
-      box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
-    }
-    .referral-link-container {
-      margin-top: 20px;
-      text-align: center;
-    }
-    .referral-link {
-      background-color: #e9ecef;
-      padding: 15px;
-      border: 1px dashed #ced4da;
-      border-radius: 8px;
-      font-family: 'Courier New', Courier, monospace;
-      overflow-wrap: break-word;
-      margin: 15px auto;
-      max-width: 90%;
-      display: block;
-    }
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-top: 20px;
-    }
-    form label {
-      font-weight: 600;
-    }
-    form input, form select {
-      padding: 12px;
-      border: 1px solid #ced4da;
-      border-radius: 5px;
-      font-size: 16px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .navbar {
-      background-color: #ffffff;
-      overflow: hidden;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      display: flex;
-      justify-content: space-around;
-      box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
-      border-top: 1px solid #e0e0e0;
-      z-index: 1000;
-    }
-    .navbar a {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: #999;
-      text-align: center;
-      padding: 8px 0;
-      text-decoration: none;
-      font-size: 10px;
-      flex-grow: 1;
-      transition: all 0.3s ease;
-    }
-    .navbar a i {
-      font-size: 20px;
-      margin-bottom: 4px;
-      transition: transform 0.3s ease;
-    }
-    .navbar a.active {
-      color: #007bff;
-    }
-    .navbar a:hover {
-      color: #007bff;
-      background-color: #f9f9f9;
-    }
-    .navbar a:hover i {
-      transform: scale(1.1);
-    }
+    body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; color: #333; padding-bottom: 75px; }
+    .top-bar { padding:15px 20px; background:#fff; display:flex; justify-content:space-between; align-items:center;
+      box-shadow:0 2px 5px rgba(0,0,0,0.05); position:sticky; top:0; z-index:1000; }
+    .time { font-weight:bold; font-size:14px; color:#555; }
+    .indicators i { margin-left:10px; color:#999; }
+    .content { padding:20px; }
+    .section { background:#fff; padding:20px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.08);
+      margin-bottom:20px; scroll-margin-top:80px; }
+    .section h2 { margin-top:0; font-size:24px; border-bottom:2px solid #f0f2f5; padding-bottom:15px; }
+    .info-card { background:#f9f9f9; padding:15px; border-radius:8px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); margin-top:15px;}
+    .info-item { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #e0e0e0; font-size:16px;}
+    .info-item:last-child { border-bottom:none; }
+    .btn { background:linear-gradient(to right, #007bff,#0056b3); color:#fff; padding:15px 25px; border:none;
+      border-radius:8px; font-size:18px; font-weight:600; cursor:pointer; text-align:center; transition:all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,123,255,0.3); text-decoration:none; display:inline-block; }
+    .btn:hover { transform:translateY(-2px); box-shadow:0 6px 15px rgba(0,123,255,0.4); }
+    .contact-btn { background:linear-gradient(to right,#28a745,#1e7e34); }
+    .refer-btn { background:linear-gradient(to right,#ffc107,#e0a800); }
+    .withdraw-btn { background:linear-gradient(to right,#dc3545,#bd2130); }
+    .btn-group { display:flex; flex-direction:column; gap:15px; margin-top:20px; }
+    .referral-link-container { text-align:center; margin-top:20px; }
+    .referral-link { background:#e9ecef; padding:15px; border:1px dashed #ced4da; border-radius:8px;
+      font-family:'Courier New', monospace; overflow-wrap:break-word; margin:15px auto; max-width:90%; display:block; }
+    form { display:flex; flex-direction:column; gap:15px; margin-top:20px; }
+    form label { font-weight:600; }
+    form input, form select { padding:12px; font-size:16px; border:1px solid #ced4da; border-radius:5px; width:100%; box-sizing:border-box; }
+    .navbar { position:fixed; bottom:0; width:100%; background:#fff; display:flex; justify-content:space-around; 
+      box-shadow:0 -4px 10px rgba(0,0,0,0.1); border-top:1px solid #e0e0e0; z-index:1000; }
+    .navbar a { flex-grow:1; color:#999; text-decoration:none; text-align:center; padding:8px 0; font-size:10px; }
+    .navbar a i { font-size:20px; margin-bottom:4px; transition:transform 0.3s ease; }
+    .navbar a.active { color:#007bff; font-weight:bold; }
+    .navbar a:hover { color:#007bff; background:#f9f9f9; }
+    .navbar a:hover i { transform:scale(1.1); }
   </style>
 </head>
 <body>
-
   <div class="top-bar">
     <span class="time" id="current-time"></span>
     <div class="indicators"><i class="fas fa-wifi"></i><i class="fas fa-battery-full"></i></div>
   </div>
-
   <div class="content">
-    <div id="home" class="section">
-      <h2>হোম</h2>
+    <!-- Home -->
+    <div id="home" class="section"><h2>Home</h2>
       <div class="info-card">
-        <h3>ইউজার ড্যাশবোর্ড</h3>
-        <div class="info-item"><span>বর্তমান ব্যালেন্স:</span><strong>$50.00</strong></div>
-        <div class="info-item"><span>আজকের কাজ:</span><strong>20টি</strong></div>
-        <div class="info-item"><span>সম্পন্ন করা কাজ:</span><strong>15টি</strong></div>
-        <div class="info-item"><span>সর্বমোট আয়:</span><strong>$150.00</strong></div>
-        <div class="info-item"><span>আজকের বোনাস:</span><strong>$2.50</strong></div>
+        <h3>User Dashboard</h3>
+        <div class="info-item"><span>Current Balance:</span><strong>$50.00</strong></div>
+        <div class="info-item"><span>Tasks Today:</span><strong>20</strong></div>
+        <div class="info-item"><span>Completed Tasks:</span><strong>15</strong></div>
+        <div class="info-item"><span>Total Earnings:</span><strong>$150.00</strong></div>
+        <div class="info-item"><span>Today's Bonus:</span><strong>$2.50</strong></div>
       </div>
     </div>
-
-    <div id="earn" class="section">
-      <h2>আয় করুন</h2>
-      <p>আয় করতে নিচের বাটনে ক্লিক করুন:</p>
+    <!-- Earn -->
+    <div id="earn" class="section"><h2>Earn</h2>
+      <p>Click the button below to watch ads and earn:</p>
       <div class="btn-group">
-        <a href="#" class="btn" onclick="loadAd()">ওয়াচ অ্যাডস</a>
-        <a href="#" class="btn">টাস্ক সম্পন্ন করুন</a>
-        <a href="#" class="btn refer-btn">রেফার করুন</a>
+        <a href="#" class="btn" onclick="loadAd()">Watch Ads</a>
+        <a href="#" class="btn">Complete Tasks</a>
+        <a href="#" class="btn refer-btn">Refer</a>
       </div>
       <div id="gigapub-container" style="text-align:center; margin-top:20px;"></div>
     </div>
-
-    <div id="contact" class="section">
-      <h2>যোগাযোগ</h2>
-      <p>আমাদের সাথে যোগাযোগ করতে যেকোনো একটি বাটন ব্যবহার করুন।</p>
+    <!-- Contact -->
+    <div id="contact" class="section"><h2>Contact</h2>
+      <p>Use any button below to contact us:</p>
       <div class="btn-group">
-        <a href="https://t.me/admin_support" target="_blank" class="btn contact-btn">অ্যাডমিন সাপোর্ট</a>
-        <a href="https://t.me/owner_support" target="_blank" class="btn contact-btn">ওনার্স সাপোর্ট</a>
+        <a href="https://t.me/admin_support" target="_blank" class="btn contact-btn">Admin Support</a>
+        <a href="https://t.me/owner_support" target="_blank" class="btn contact-btn">Owner Support</a>
       </div>
     </div>
-
-    <div id="reference" class="section">
-      <h2>রেফারেন্স</h2>
-      <p>আপনার বন্ধুদের আমন্ত্রণ জানান এবং রেফারেল বোনাস উপার্জন করুন!</p>
+    <!-- Referral -->
+    <div id="refer" class="section"><h2>Referral</h2>
+      <p>Invite your friends and earn referral rewards!</p>
       <div class="referral-link-container">
         <div class="referral-link">https://yourwebsite.com/refer?id=user123</div>
-        <button class="btn" onclick="copyLink()">লিঙ্ক কপি করুন</button>
+        <button class="btn" onclick="copyLink()">Copy Link</button>
       </div>
     </div>
-
-    <div id="withdraw" class="section">
-      <h2>উইথড্র</h2>
-      <p>আপনার পেমেন্ট রিকোয়েস্ট জমা দিন। উইথড্র করার পর টেলিগ্রাম বটে একটি নোটিফিকেশন যাবে।</p>
+    <!-- Withdraw -->
+    <div id="withdraw" class="section"><h2>Withdraw</h2>
+      <p>Submit your payment request. A Telegram notification will be sent after withdrawal.</p>
       <form action="#" method="post">
-        <label for="amount">পরিমাণ:</label>
-        <input type="number" id="amount" name="amount" placeholder="৳100 এর বেশি" required>
-        <label for="method">উইথড্র পদ্ধতি:</label>
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" placeholder="Minimum ৳100" required />
+        <label for="method">Withdrawal Method:</label>
         <select id="method" name="method">
-          <option value="bkash">বিকাশ</option>
-          <option value="nagad">নগদ</option>
-          <option value="rocket">রকেট</option>
+          <option value="bkash">bKash</option>
+          <option value="nagad">Nagad</option>
+          <option value="rocket">Rocket</option>
         </select>
-        <label for="account">অ্যাকাউন্ট নম্বর:</label>
-        <input type="text" id="account" name="account" placeholder="আপনার মোবাইল নম্বর" required>
-        <button class="btn withdraw-btn" type="submit">উইথড্র রিকোয়েস্ট জমা দিন</button>
+        <label for="account">Account Number:</label>
+        <input type="text" id="account" name="account" placeholder="Your mobile number" required />
+        <button class="btn withdraw-btn" type="submit">Submit Withdrawal Request</button>
       </form>
     </div>
-
-    <div id="profile" class="section">
-      <h2>প্রোফাইল</h2>
+    <!-- Profile -->
+    <div id="profile" class="section"><h2>Profile</h2>
       <div class="info-card">
-        <h3>ইউজার ইনফো</h3>
-        <div class="info-item"><span>বর্তমান ব্যালেন্স:</span><strong>$50.00</strong></div>
-        <div class="info-item"><span>সর্বমোট কাজ:</span><strong>200</strong></div>
-        <div class="info-item"><span>সর্বমোট অ্যাডস:</span><strong>500</strong></div>
-        <div class="info-item"><span>সর্বমোট রেফারেল:</span><strong>25 জন</strong></div>
-        <div class="info-item"><span>জয়েন করার তারিখ:</span><strong>01/01/2024</strong></div>
+        <h3>User Info</h3>
+        <div class="info-item"><span>Current Balance:</span><strong>$50.00</strong></div>
+        <div class="info-item"><span>Total Tasks:</span><strong>200</strong></div>
+        <div class="info-item"><span>Total Ads Watched:</span><strong>500</strong></div>
+        <div class="info-item"><span>Total Referrals:</span><strong>25</strong></div>
+        <div class="info-item"><span>Join Date:</span><strong>01/01/2024</strong></div>
       </div>
     </div>
   </div>
 
   <div class="navbar">
-    <a href="#home" class="active"><i class="fas fa-home"></i>হোম</a>
-    <a href="#earn"><i class="fas fa-sack-dollar"></i>আয় করুন</a>
-    <a href="#contact"><i class="fas fa-headset"></i>যোগাযোগ</a>
-    <a href="#reference"><i class="fas fa-share-alt"></i>রেফারেন্স</a>
-    <a href="#withdraw"><i class="fas fa-wallet"></i>উইথড্র</a>
-    <a href="#profile"><i class="fas fa-user"></i>প্রোফাইল</a>
+    <a href="#home" class="active"><i class="fas fa-home"></i>Home</a>
+    <a href="#earn"><i class="fas fa-sack-dollar"></i>Earn</a>
+    <a href="#contact"><i class="fas fa-headset"></i>Contact</a>
+    <a href="#refer"><i class="fas fa-share-alt"></i>Referral</a>
+    <a href="#withdraw"><i class="fas fa-wallet"></i>Withdraw</a>
+    <a href="#profile"><i class="fas fa-user"></i>Profile</a>
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const navbarLinks = document.querySelectorAll('.navbar a');
-
-      function smoothScroll(targetId) {
-        const targetSection = document.querySelector(targetId);
-        if (targetSection) {
-          window.scrollTo({ top: targetSection.offsetTop, behavior: 'smooth' });
-        }
+      const navbar = document.querySelectorAll('.navbar a');
+      function scrollToSection(id) {
+        const el = document.querySelector(id);
+        if (el) window.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
       }
+      navbar.forEach(link => link.addEventListener('click', e => {
+        navbar.forEach(a => a.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        e.preventDefault();
+        scrollToSection(e.currentTarget.getAttribute('href'));
+      }));
 
-      navbarLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-          navbarLinks.forEach(item => item.classList.remove('active'));
-          e.currentTarget.classList.add('active');
-          e.preventDefault();
-          smoothScroll(e.currentTarget.getAttribute('href'));
-        });
-      });
-
-      const currentHash = window.location.hash || '#home';
-      const activeLink = document.querySelector(`.navbar a[href="${currentHash}"]`);
+      const defaultHash = window.location.hash || '#home';
+      const activeLink = document.querySelector(`.navbar a[href="${defaultHash}"]`);
       if (activeLink) activeLink.classList.add('active');
 
       window.addEventListener('scroll', () => {
-        const scrollPosition = window.scrollY + 100;
-        document.querySelectorAll('.section').forEach(section => {
-          const sectionTop = section.offsetTop;
-          const sectionHeight = section.offsetHeight;
-          const sectionId = `#${section.id}`;
-          navbarLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === sectionId) {
-              link.classList.add('active');
-            }
-          });
+        const pos = window.scrollY + 100;
+        document.querySelectorAll('.section').forEach(s => {
+          if (pos >= s.offsetTop && pos < s.offsetTop + s.offsetHeight) {
+            navbar.forEach(a => a.classList.remove('active'));
+            const a = document.querySelector(`.navbar a[href="#${s.id}"]`);
+            if (a) a.classList.add('active');
+          }
         });
       });
 
-      window.copyLink = function() {
-        const linkText = document.querySelector('.referral-link').innerText;
-        navigator.clipboard.writeText(linkText).then(() => {
-          alert("লিঙ্ক কপি করা হয়েছে!");
-        });
+      window.copyLink = () => {
+        const txt = document.querySelector('.referral-link').innerText;
+        navigator.clipboard.writeText(txt).then(() => alert('Link copied!'));
       };
 
-      window.loadAd = function () {
-        if (document.getElementById('gigapub-ad')) {
-          alert("অ্যাড ইতোমধ্যে লোড হয়েছে!");
-          return;
+      window.loadAd = () => {
+        if (typeof window.showGiga !== 'function') {
+          const script = document.createElement('script');
+          script.src = 'https://ad.gigapub.tech/script?id=YOUR_ID'; // ← Replace YOUR_ID
+          script.async = true;
+          script.onload = () => showGifReward();
+          script.onerror = () => alert('Could not load ad script.');
+          document.body.appendChild(script);
+        } else {
+          showGifReward();
         }
-        const script = document.createElement('script');
-        script.src = "https://ad.gigapub.tech/script?id=1202"; // <-- এখানে আপনার GigaPub ID দিন
-        script.id = "gigapub-ad";
-        script.async = true;
-        document.body.appendChild(script);
       };
 
-      function updateTime() {
-        const now = new Date();
-        const options = {
-          weekday:'long', year:'numeric', month:'long',
-          day:'numeric', hour:'2-digit', minute:'2-digit', second:'2-digit'
-        };
-        document.getElementById('current-time').textContent = now.toLocaleDateString('bn-BD', options);
+      function showGifReward() {
+        window.showGiga()
+          .then(() => {
+            alert('✅ Ad completed! Reward granted.');
+            // ← Place your reward logic here (e.g. update UI, call server)
+          })
+          .catch(err => {
+            console.warn('Ad error or not completed:', err);
+            alert('Ad was not completed. Please try again.');
+          });
       }
 
+      function updateTime(){
+        const now = new Date();
+        document.getElementById('current-time').textContent = now.toLocaleDateString('en-US', {
+          weekday:'long', year:'numeric', month:'long', day:'numeric',
+          hour:'2-digit', minute:'2-digit', second:'2-digit'
+        });
+      }
       updateTime();
       setInterval(updateTime, 1000);
     });
   </script>
-
 </body>
 </html>

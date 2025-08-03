@@ -27,12 +27,23 @@
             top: 0;
             z-index: 1000;
         }
-        
+
+        .top-bar .time {
+            font-weight: bold;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .top-bar .indicators i {
+            margin-left: 10px;
+            color: #999;
+        }
+
         /* Content Sections */
         .content {
             padding: 20px;
         }
-        
+
         /* Section Styling */
         .section {
             padding: 20px;
@@ -50,7 +61,7 @@
             border-bottom: 2px solid #f0f2f5;
             padding-bottom: 15px;
         }
-        
+
         .info-card {
             background-color: #f9f9f9;
             border-radius: 8px;
@@ -66,15 +77,15 @@
             border-bottom: 1px solid #e0e0e0;
             font-size: 16px;
         }
-        
+
         .info-item:last-child {
             border-bottom: none;
         }
-        
+
         .info-item strong {
             color: #555;
         }
-        
+
         /* Button Styles */
         .btn-group {
             display: flex;
@@ -103,12 +114,12 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
         }
-        
+
         .contact-btn {
             background-image: linear-gradient(to right, #28a745, #1e7e34);
             box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
         }
-        
+
         .contact-btn:hover {
             box-shadow: 0 6px 15px rgba(40, 167, 69, 0.4);
         }
@@ -117,11 +128,11 @@
             background-image: linear-gradient(to right, #ffc107, #e0a800);
             box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3);
         }
-        
+
         .refer-btn:hover {
             box-shadow: 0 6px 15px rgba(255, 193, 7, 0.4);
         }
-        
+
         .withdraw-btn {
             background-image: linear-gradient(to right, #dc3545, #bd2130);
             box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
@@ -130,7 +141,7 @@
         .withdraw-btn:hover {
             box-shadow: 0 6px 15px rgba(220, 53, 69, 0.4);
         }
-        
+
         /* Referral Link Styles */
         .referral-link-container {
             margin-top: 20px;
@@ -148,7 +159,7 @@
             max-width: 90%;
             display: block;
         }
-        
+
         /* Form Styles */
         form {
             display: flex;
@@ -156,7 +167,7 @@
             gap: 15px;
             margin-top: 20px;
         }
-        
+
         form label {
             font-weight: 600;
         }
@@ -169,7 +180,7 @@
             width: 100%;
             box-sizing: border-box;
         }
-        
+
         /* Ad Container Styles */
         #ad-container {
             padding: 20px;
@@ -210,29 +221,29 @@
             flex-grow: 1;
             transition: all 0.3s ease;
         }
-        
+
         .navbar a i {
             font-size: 20px;
             margin-bottom: 4px;
             transition: transform 0.3s ease;
         }
-        
+
         .navbar a.active {
             color: #007bff;
         }
-        
+
         .navbar a:hover {
             color: #007bff;
             background-color: #f9f9f9;
         }
-        
+
         .navbar a:hover i {
             transform: scale(1.1);
         }
     </style>
 </head>
 <body>
-    
+
     <div class="top-bar">
         <span class="time" id="current-time"></span>
         <div class="indicators">
@@ -268,7 +279,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div id="earn" class="section">
             <h2>আয় করুন</h2>
             <p>আয় করতে নিচের বাটনগুলো ব্যবহার করুন।</p>
@@ -277,7 +288,7 @@
                 <a href="#" class="btn">টাস্ক সম্পন্ন করুন</a>
                 <a href="#" class="btn refer-btn">রেফার করুন</a>
             </div>
-            
+
             <div id="ad-container">
                 <h3>বিজ্ঞাপন</h3>
                 <p>এখানে বিজ্ঞাপন লোড হবে।</p>
@@ -301,28 +312,28 @@
                 <button class="btn" onclick="copyLink()">লিঙ্ক কপি করুন</button>
             </div>
         </div>
-        
+
         <div id="withdraw" class="section">
             <h2>উইথড্র</h2>
             <p>আপনার পেমেন্ট রিকোয়েস্ট জমা দিন। উইথড্র করার পর টেলিগ্রাম বটে একটি নোটিফিকেশন যাবে।</p>
             <form action="#" method="post">
                 <label for="amount">পরিমাণ:</label>
                 <input type="number" id="amount" name="amount" placeholder="৳100 এর বেশি" required>
-                
+
                 <label for="method">উইথড্র পদ্ধতি:</label>
                 <select id="method" name="method">
                     <option value="bkash">বিকাশ</option>
                     <option value="nagad">নগদ</option>
                     <option value="rocket">রকেট</option>
                 </select>
-                
+
                 <label for="account">অ্যাকাউন্ট নম্বর:</label>
                 <input type="text" id="account" name="account" placeholder="আপনার মোবাইল নম্বর" required>
-                
+
                 <button class="btn withdraw-btn" type="submit">উইথড্র রিকোয়েস্ট জমা দিন</button>
             </form>
         </div>
-        
+
         <div id="profile" class="section">
             <h2>প্রোফাইল</h2>
             <div class="info-card">
@@ -363,7 +374,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const navbarLinks = document.querySelectorAll('.navbar a');
-            
+
             // Function to handle smooth scrolling
             function smoothScroll(targetId) {
                 const targetSection = document.querySelector(targetId);
@@ -400,7 +411,7 @@
                     const sectionTop = section.offsetTop;
                     const sectionHeight = section.offsetHeight;
                     const sectionId = `#${section.id}`;
-                    
+
                     if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
                         navbarLinks.forEach(link => {
                             link.classList.remove('active');
@@ -431,23 +442,20 @@
                     smoothScroll('#ad-container');
                     return;
                 }
-                
+
                 adContainer.innerHTML = '<h3>বিজ্ঞাপন লোড হচ্ছে...</h3>';
-                
+
                 const script = document.createElement('script');
                 script.src = "https://ad.gigapub.tech/script?id=919";
-                
+
                 script.onload = () => {
-                    // This part might not be needed if the script automatically places the ad
                     console.log("Ad script loaded successfully.");
-                    adContainer.innerHTML = ''; // Clear "loading" message
-                    // Some ad scripts require the container to be already present
                 };
-                
+
                 script.onerror = () => {
                     adContainer.innerHTML = '<h3>বিজ্ঞাপন লোড করা যায়নি।</h3><p>দয়া করে আবার চেষ্টা করুন।</p>';
                 };
-                
+
                 // Append the script directly to the ad container
                 adContainer.appendChild(script);
 

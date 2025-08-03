@@ -468,26 +468,24 @@
                 adOverlay.style.display = 'flex';
                 document.body.style.overflow = 'hidden';
 
-                // Check if the script has already been loaded
                 if (adContainer.querySelector('script')) {
                     adContainer.querySelector('script').remove();
                 }
 
                 const script = document.createElement('script');
-                script.src = "https://ad.gigapub.tech/script?id=919";
+                script.src = "https://ad.gigapub.tech/script?id=1202";
 
                 let adLoadTimeout = setTimeout(() => {
-                    // This will run if the ad doesn't load within 5 seconds
                     adContainer.innerHTML = '<h3>বিজ্ঞাপন লোড করা যায়নি।</h3><p>দয়া করে আবার চেষ্টা করুন।</p>';
                 }, 5000); // 5-second timeout
 
                 script.onload = () => {
-                    clearTimeout(adLoadTimeout); // Clear the timeout if ad loads successfully
-                    console.log("Ad script loaded successfully.");
+                    clearTimeout(adLoadTimeout);
+                    console.log("Ad script loaded successfully with new ID.");
                 };
                 
                 script.onerror = () => {
-                    clearTimeout(adLoadTimeout); // Clear the timeout
+                    clearTimeout(adLoadTimeout);
                     adContainer.innerHTML = '<h3>বিজ্ঞাপন লোড করা যায়নি।</h3><p>দয়া করে আবার চেষ্টা করুন।</p>';
                 };
                 

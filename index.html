@@ -204,12 +204,23 @@
             text-align: center;
             position: relative;
         }
-        
+
         #ad-container {
             min-height: 200px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+        }
+        
+        .close-ad-btn {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
         /* Navigation Bar (Footer) */
@@ -384,18 +395,19 @@
         <a href="#profile"><i class="fas fa-user"></i>প্রোফাইল</a>
     </div>
 
-    <div id="ad-overlay" onclick="closeAd()">
-        <div id="ad-modal" onclick="event.stopPropagation()">
+    <div id="ad-overlay">
+        <div id="ad-modal">
             <div id="ad-container">
                 <h3>বিজ্ঞাপন লোড হচ্ছে...</h3>
             </div>
+            <button class="close-ad-btn" onclick="closeAd()">বন্ধ করুন</button>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const navbarLinks = document.querySelectorAll('.navbar a');
-
+            
             function smoothScroll(targetId) {
                 const targetSection = document.querySelector(targetId);
                 if (targetSection) {
@@ -454,30 +466,40 @@
                 
                 adContainer.innerHTML = '<h3>বিজ্ঞাপন লোড হচ্ছে...</h3>';
                 adOverlay.style.display = 'flex';
-                document.body.style.overflow = 'hidden'; // Prevent scrolling when overlay is active
+                document.body.style.overflow = 'hidden';
+
+                // Check if the script has already been loaded
+                if (adContainer.querySelector('script')) {
+                    adContainer.querySelector('script').remove();
+                }
 
                 const script = document.createElement('script');
                 script.src = "https://ad.gigapub.tech/script?id=919";
 
+                let adLoadTimeout = setTimeout(() => {
+                    // This will run if the ad doesn't load within 5 seconds
+                    adContainer.innerHTML = '<h3>বিজ্ঞাপন লোড করা যায়নি।</h3><p>দয়া করে আবার চেষ্টা করুন।</p>';
+                }, 5000); // 5-second timeout
+
                 script.onload = () => {
+                    clearTimeout(adLoadTimeout); // Clear the timeout if ad loads successfully
                     console.log("Ad script loaded successfully.");
                 };
-
+                
                 script.onerror = () => {
+                    clearTimeout(adLoadTimeout); // Clear the timeout
                     adContainer.innerHTML = '<h3>বিজ্ঞাপন লোড করা যায়নি।</h3><p>দয়া করে আবার চেষ্টা করুন।</p>';
                 };
                 
-                // Clear any previous content and append the script to the ad container
-                adContainer.innerHTML = '';
                 adContainer.appendChild(script);
             };
 
             window.closeAd = function() {
                 const adOverlay = document.getElementById('ad-overlay');
                 adOverlay.style.display = 'none';
-                document.body.style.overflow = 'auto'; // Restore scrolling
+                document.body.style.overflow = 'auto';
             };
-
+            
             function updateTime() {
                 const now = new Date();
                 const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };

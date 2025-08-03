@@ -3,116 +3,128 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Earn with GigaPub</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <title>GigaPub Reward Bot</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f0f2f5; padding-bottom: 70px; }
-    .top-bar { padding: 15px 20px; background: #fff; display: flex; justify-content: space-between; align-items: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
-    .time { font-weight: bold; font-size: 14px; color: #555; }
-    .content { padding: 20px; }
-    .section { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 20px; }
-    .section h2 { margin-top: 0; font-size: 22px; border-bottom: 2px solid #f0f2f5; padding-bottom: 10px; }
-    .btn { background: linear-gradient(to right, #007bff, #0056b3); color: #fff; padding: 15px; border: none;
-      border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; text-align: center;
-      transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0,123,255,0.3); display: inline-block; width: 100%; }
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,123,255,0.4); }
-    .navbar { position: fixed; bottom: 0; width: 100%; background: #fff; display: flex; justify-content: space-around;
-      box-shadow: 0 -4px 10px rgba(0,0,0,0.1); border-top: 1px solid #e0e0e0; z-index: 1000; }
-    .navbar a { flex-grow: 1; color: #999; text-decoration: none; text-align: center; padding: 8px 0; font-size: 10px; }
-    .navbar a i { font-size: 20px; display: block; }
-    .navbar a.active { color: #007bff; font-weight: bold; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background: #007bff;
+      color: white;
+      padding: 15px 20px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+    .balance-box {
+      background: #e9f0ff;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 18px;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(to right, #007bff, #0056b3);
+      color: white;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: 0.3s;
+    }
+    .btn:hover {
+      background: linear-gradient(to right, #0056b3, #003f80);
+    }
+    .info {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #666;
+    }
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      padding: 15px;
+      font-size: 13px;
+      color: #888;
+    }
   </style>
 </head>
 <body>
 
-  <div class="top-bar">
-    <span class="time" id="current-time">Loading time...</span>
-    <div><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></div>
+  <header>🎁 GigaPub Reward Dashboard</header>
+
+  <div class="container">
+    <div class="balance-box">
+      <strong>Current Balance:</strong> <span id="balance">$0.00</span><br/>
+      <strong>Watched Ads Today:</strong> <span id="adsWatched">0</span>
+    </div>
+
+    <button class="btn" onclick="loadGigaAd()">🎥 Watch Ad & Earn</button>
+
+    <div class="info">
+      ✅ Watch the full ad to receive your reward instantly.<br/>
+      ❌ Skipping or closing early will cancel the reward.
+    </div>
   </div>
 
-  <div class="content">
+  <footer>Developed by Hridoy Skill | Powered by GigaPub</footer>
 
-    <!-- Dashboard -->
-    <div class="section" id="home">
-      <h2>Dashboard</h2>
-      <p><strong>Balance:</strong> $50.00</p>
-      <p><strong>Tasks Done:</strong> 10</p>
-      <p><strong>Total Earned:</strong> $150.00</p>
-    </div>
-
-    <!-- Earn Section -->
-    <div class="section" id="earn">
-      <h2>Earn Rewards</h2>
-      <button class="btn" onclick="loadAd()">🎥 Watch Ad to Earn</button>
-    </div>
-
-    <!-- Withdraw -->
-    <div class="section" id="withdraw">
-      <h2>Withdraw</h2>
-      <p>Withdraw requests available after $5.00.</p>
-      <button class="btn" onclick="alert('Withdraw request sent!')">Request Withdraw</button>
-    </div>
-
-    <!-- Contact -->
-    <div class="section" id="contact">
-      <h2>Need Help?</h2>
-      <a href="https://t.me/admin_support" target="_blank" class="btn">💬 Contact Admin</a>
-    </div>
-
-  </div>
-
-  <!-- Bottom Nav -->
-  <div class="navbar">
-    <a href="#home" class="active"><i class="fas fa-home"></i>Home</a>
-    <a href="#earn"><i class="fas fa-sack-dollar"></i>Earn</a>
-    <a href="#withdraw"><i class="fas fa-wallet"></i>Withdraw</a>
-    <a href="#contact"><i class="fas fa-headset"></i>Help</a>
-  </div>
-
-  <!-- GigaPub Ad Logic -->
   <script>
-    function loadAd() {
+    let balance = 0.00;
+    let adsWatched = 0;
+
+    function loadGigaAd() {
       if (typeof window.showGiga !== 'function') {
         const script = document.createElement('script');
-        script.src = 'https://ad.gigapub.tech/script?id=919';
+        script.src = 'https://ad.gigapub.tech/script?id=919'; // Your GigaPub Zone ID
         script.async = true;
         script.onload = () => {
           if (typeof window.showGiga === 'function') {
-            showGifReward();
+            showAd();
           } else {
-            alert("⚠️ Ad loaded but function not found.");
+            alert("⚠️ Ad script loaded, but showGiga not available.");
           }
         };
-        script.onerror = () => {
-          alert("❌ Failed to load GigaPub ad script.");
-        };
+        script.onerror = () => alert("❌ Failed to load GigaPub ad script.");
         document.body.appendChild(script);
       } else {
-        showGifReward();
+        showAd();
       }
     }
 
-    function showGifReward() {
+    function showAd() {
       window.showGiga()
         .then(() => {
-          alert("✅ Ad watched! Reward granted.");
-          // এখানে আপনি Firebase এ পয়েন্ট আপডেট করতে পারেন
+          alert("✅ Ad completed! You've earned $0.10.");
+          balance += 0.10;
+          adsWatched += 1;
+          updateDashboard();
         })
-        .catch(err => {
-          console.warn("Ad error:", err);
-          alert("⚠️ Ad not completed. Try again.");
+        .catch(() => {
+          alert("❌ Ad skipped or not completed. Try again.");
         });
     }
 
-    function updateTime() {
-      const now = new Date();
-      document.getElementById('current-time').textContent = now.toLocaleTimeString('en-US', {
-        hour: '2-digit', minute: '2-digit', second: '2-digit'
-      }) + ' | ' + now.toLocaleDateString();
+    function updateDashboard() {
+      document.getElementById("balance").innerText = "$" + balance.toFixed(2);
+      document.getElementById("adsWatched").innerText = adsWatched;
     }
-    updateTime();
-    setInterval(updateTime, 1000);
   </script>
 
 </body>

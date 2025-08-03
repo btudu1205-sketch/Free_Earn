@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -63,6 +63,48 @@
       font-size: 13px;
       color: #888;
     }
+    
+    /* Ad Modal/Overlay Styles (Added) */
+    #ad-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        display: none; /* Initially hidden */
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+    }
+
+    #ad-modal {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        max-width: 90%;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+        text-align: center;
+        position: relative;
+    }
+
+    #ad-container {
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .close-ad-btn {
+        margin-top: 15px;
+        padding: 10px 20px;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -71,54 +113,73 @@
 
   <div class="container">
     <div class="balance-box">
-      <strong>Current Balance:</strong> <span id="balance">$0.00</span><br/>
-      <strong>Watched Ads Today:</strong> <span id="adsWatched">0</span>
+      <strong>বর্তমান ব্যালেন্স:</strong> <span id="balance">$0.00</span><br/>
+      <strong>আজ দেখা বিজ্ঞাপন:</strong> <span id="adsWatched">0</span>
     </div>
 
-    <button class="btn" onclick="loadGigaAd()">🎥 Watch Ad & Earn</button>
+    <button class="btn" onclick="loadAd()">🎥 বিজ্ঞাপন দেখুন ও আয় করুন</button>
 
     <div class="info">
-      ✅ Watch the full ad to receive your reward instantly.<br/>
-      ❌ Skipping or closing early will cancel the reward.
+      ✅ সম্পূর্ণ বিজ্ঞাপন দেখলে আপনার আয় জমা হবে।<br/>
+      ❌ বিজ্ঞাপন মাঝপথে বন্ধ করলে কোনো আয় জমা হবে না।
     </div>
   </div>
 
   <footer>Developed by Hridoy Skill | Powered by GigaPub</footer>
 
+  <div id="ad-overlay">
+    <div id="ad-modal">
+        <div id="ad-container">
+            <h3>বিজ্ঞাপন লোড হচ্ছে...</h3>
+        </div>
+        <button class="close-ad-btn" onclick="closeAd()">বন্ধ করুন</button>
+    </div>
+  </div>
+
   <script>
     let balance = 0.00;
     let adsWatched = 0;
 
-    function loadGigaAd() {
-      if (typeof window.showGiga !== 'function') {
+    function loadAd() {
+        const adOverlay = document.getElementById('ad-overlay');
+        const adContainer = document.getElementById('ad-container');
+        
+        adContainer.innerHTML = '<h3>বিজ্ঞাপন লোড হচ্ছে...</h3>';
+        adOverlay.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+
+        // Remove previous script to avoid conflicts
+        if (adContainer.querySelector('script')) {
+            adContainer.querySelector('script').remove();
+        }
+
         const script = document.createElement('script');
-        script.src = 'https://ad.gigapub.tech/script?id=919'; // Your GigaPub Zone ID
-        script.async = true;
+        script.src = "https://ad.gigapub.tech/script?id=1202"; // Updated with correct ID
+        
+        // Timeout to handle ad not loading
+        let adLoadTimeout = setTimeout(() => {
+            adContainer.innerHTML = '<h3>বিজ্ঞাপন লোড করা যায়নি।</h3><p>দয়া করে আবার চেষ্টা করুন।</p>';
+        }, 5000); // 5-second timeout
+
+        // A simple way to check if the ad loaded is to check for the script onload event.
         script.onload = () => {
-          if (typeof window.showGiga === 'function') {
-            showAd();
-          } else {
-            alert("⚠️ Ad script loaded, but showGiga not available.");
-          }
+            clearTimeout(adLoadTimeout); // Clear the timeout if ad loads successfully
+            console.log("Ad script loaded successfully.");
+            // Note: The actual ad content display is controlled by GigaPub's script itself.
         };
-        script.onerror = () => alert("❌ Failed to load GigaPub ad script.");
-        document.body.appendChild(script);
-      } else {
-        showAd();
-      }
+        
+        script.onerror = () => {
+            clearTimeout(adLoadTimeout);
+            adContainer.innerHTML = '<h3>বিজ্ঞাপন লোড করা যায়নি।</h3><p>দয়া করে আবার চেষ্টা করুন।</p>';
+        };
+        
+        adContainer.appendChild(script);
     }
 
-    function showAd() {
-      window.showGiga()
-        .then(() => {
-          alert("✅ Ad completed! You've earned $0.10.");
-          balance += 0.10;
-          adsWatched += 1;
-          updateDashboard();
-        })
-        .catch(() => {
-          alert("❌ Ad skipped or not completed. Try again.");
-        });
+    function closeAd() {
+        const adOverlay = document.getElementById('ad-overlay');
+        adOverlay.style.display = 'none';
+        document.body.style.overflow = 'auto';
     }
 
     function updateDashboard() {

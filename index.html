@@ -12,8 +12,7 @@
     .time { font-weight:bold; font-size:14px; color:#555; }
     .indicators i { margin-left:10px; color:#999; }
     .content { padding:20px; }
-    .section { background:#fff; padding:20px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.08);
-      margin-bottom:20px; scroll-margin-top:80px; }
+    .section { background:#fff; padding:20px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.08); margin-bottom:20px; scroll-margin-top:80px; }
     .section h2 { margin-top:0; font-size:24px; border-bottom:2px solid #f0f2f5; padding-bottom:15px; }
     .info-card { background:#f9f9f9; padding:15px; border-radius:8px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); margin-top:15px;}
     .info-item { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #e0e0e0; font-size:16px;}
@@ -47,8 +46,10 @@
     <div class="indicators"><i class="fas fa-wifi"></i><i class="fas fa-battery-full"></i></div>
   </div>
   <div class="content">
+
     <!-- Home -->
-    <div id="home" class="section"><h2>Home</h2>
+    <div id="home" class="section">
+      <h2>Home</h2>
       <div class="info-card">
         <h3>User Dashboard</h3>
         <div class="info-item"><span>Current Balance:</span><strong>$50.00</strong></div>
@@ -58,8 +59,10 @@
         <div class="info-item"><span>Today's Bonus:</span><strong>$2.50</strong></div>
       </div>
     </div>
+
     <!-- Earn -->
-    <div id="earn" class="section"><h2>Earn</h2>
+    <div id="earn" class="section">
+      <h2>Earn</h2>
       <p>Click the button below to watch ads and earn:</p>
       <div class="btn-group">
         <a href="#" class="btn" onclick="loadAd()">Watch Ads</a>
@@ -68,26 +71,29 @@
       </div>
       <div id="gigapub-container" style="text-align:center; margin-top:20px;"></div>
     </div>
+
     <!-- Contact -->
-    <div id="contact" class="section"><h2>Contact</h2>
-      <p>Use any button below to contact us:</p>
+    <div id="contact" class="section">
+      <h2>Contact</h2>
       <div class="btn-group">
         <a href="https://t.me/admin_support" target="_blank" class="btn contact-btn">Admin Support</a>
         <a href="https://t.me/owner_support" target="_blank" class="btn contact-btn">Owner Support</a>
       </div>
     </div>
+
     <!-- Referral -->
-    <div id="refer" class="section"><h2>Referral</h2>
-      <p>Invite your friends and earn referral rewards!</p>
+    <div id="refer" class="section">
+      <h2>Referral</h2>
       <div class="referral-link-container">
         <div class="referral-link">https://yourwebsite.com/refer?id=user123</div>
         <button class="btn" onclick="copyLink()">Copy Link</button>
       </div>
     </div>
+
     <!-- Withdraw -->
-    <div id="withdraw" class="section"><h2>Withdraw</h2>
-      <p>Submit your payment request. A Telegram notification will be sent after withdrawal.</p>
-      <form action="#" method="post">
+    <div id="withdraw" class="section">
+      <h2>Withdraw</h2>
+      <form>
         <label for="amount">Amount:</label>
         <input type="number" id="amount" name="amount" placeholder="Minimum ৳100" required />
         <label for="method">Withdrawal Method:</label>
@@ -101,8 +107,10 @@
         <button class="btn withdraw-btn" type="submit">Submit Withdrawal Request</button>
       </form>
     </div>
+
     <!-- Profile -->
-    <div id="profile" class="section"><h2>Profile</h2>
+    <div id="profile" class="section">
+      <h2>Profile</h2>
       <div class="info-card">
         <h3>User Info</h3>
         <div class="info-item"><span>Current Balance:</span><strong>$50.00</strong></div>
@@ -114,6 +122,7 @@
     </div>
   </div>
 
+  <!-- Bottom Navbar -->
   <div class="navbar">
     <a href="#home" class="active"><i class="fas fa-home"></i>Home</a>
     <a href="#earn"><i class="fas fa-sack-dollar"></i>Earn</a>
@@ -123,6 +132,7 @@
     <a href="#profile"><i class="fas fa-user"></i>Profile</a>
   </div>
 
+  <!-- Script Part -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const navbar = document.querySelectorAll('.navbar a');
@@ -130,6 +140,7 @@
         const el = document.querySelector(id);
         if (el) window.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
       }
+
       navbar.forEach(link => link.addEventListener('click', e => {
         navbar.forEach(a => a.classList.remove('active'));
         e.currentTarget.classList.add('active');
@@ -160,7 +171,7 @@
       window.loadAd = () => {
         if (typeof window.showGiga !== 'function') {
           const script = document.createElement('script');
-          script.src = 'https://ad.gigapub.tech/script?id=YOUR_ID'; // ← Replace YOUR_ID
+          script.src = 'https://ad.gigapub.tech/script?id=919';
           script.async = true;
           script.onload = () => showGifReward();
           script.onerror = () => alert('Could not load ad script.');
@@ -174,7 +185,7 @@
         window.showGiga()
           .then(() => {
             alert('✅ Ad completed! Reward granted.');
-            // ← Place your reward logic here (e.g. update UI, call server)
+            // এখানে Firebase এ পয়েন্ট আপডেট করতে পারেন (আগে কনফিগার করতে হবে)
           })
           .catch(err => {
             console.warn('Ad error or not completed:', err);

@@ -250,9 +250,9 @@
     <div id="registerSection" class="auth-container">
         <h2><i class="fas fa-user-plus"></i> Register</h2>
         <form id="registerForm" onsubmit="handleRegistration(event)">
-            <input type="text" id="reg_username" placeholder="Telegram Username" required>
-            <input type="password" id="reg_password" placeholder="Password" required>
-            <input type="text" id="reg_chat_id" placeholder="Telegram Chat ID" required>
+            <input type="text" id="reg_username" placeholder="Telegram Username (@username)" required>
+            <input type="password" id="reg_password" placeholder="Password (min 8 characters)" required>
+            <input type="text" id="reg_chat_id" placeholder="Telegram Chat ID (10 digits)" required>
             <button type="submit" class="btn btn-primary">Register</button>
         </form>
         <p>Already have an account? <a href="#" onclick="showLogin()">Login here</a></p>
@@ -300,7 +300,6 @@
       <h3>Ads Watched</h3>
       <span class="value" id="ads">0</span>
     </div>
-    <button class="btn btn-admin" onclick="logout()">Logout</button>
   </div>
 
   <div id="earn" class="section">
@@ -351,7 +350,6 @@
       <h3>Total Ads Watched</h3>
       <span class="value" id="profileAds">0</span>
     </div>
-    <button class="btn btn-admin" onclick="logout()">Logout</button>
   </div>
 </div>
 
@@ -463,6 +461,20 @@
     const password = document.getElementById('reg_password').value;
     const telegramChatId = document.getElementById('reg_chat_id').value;
     
+    // Validation Checks
+    if (!username.startsWith('@')) {
+        alert("❌ Username must start with '@'.");
+        return;
+    }
+    if (password.length < 8) {
+        alert("❌ Password must be at least 8 characters long.");
+        return;
+    }
+    if (telegramChatId.length !== 10) {
+        alert("❌ Telegram Chat ID must be exactly 10 digits long.");
+        return;
+    }
+    
     if (localStorage.getItem(username)) {
       alert("❌ This username is already taken!");
       return;
@@ -514,12 +526,6 @@
     } else {
       alert("❌ Invalid username or password.");
     }
-  }
-
-  function logout() {
-    localStorage.removeItem('currentUsername');
-    currentUsername = null;
-    checkLoginStatus();
   }
 
   // App Logic

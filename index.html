@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body { font-family: Arial, sans-serif; margin: 0; background: #f9f9f9; }
-    nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #fff; border-top: 1px solid #ccc; }
+    nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #fff; border-top: 1px solid #ccc; z-index: 100; }
     nav button { flex: 1; padding: 10px; font-size: 14px; background: none; border: none; }
     .section { display: none; padding: 20px; }
     .active { display: block; }
@@ -71,8 +71,8 @@
   <button onclick="showSection('profile')">👤 Profile</button>
 </nav>
 
+<!-- Scripts -->
 <script>
-  // Local data
   let balance = parseInt(localStorage.getItem('balance') || 0);
   let withdraw = parseInt(localStorage.getItem('withdraw') || 0);
   let tasks = parseInt(localStorage.getItem('tasks') || 0);
@@ -94,10 +94,17 @@
     document.getElementById("profileAds").innerText = ads;
   }
 
+  function saveData() {
+    localStorage.setItem("balance", balance);
+    localStorage.setItem("withdraw", withdraw);
+    localStorage.setItem("tasks", tasks);
+    localStorage.setItem("ads", ads);
+  }
+
   function watchAds() {
     const adbox = document.getElementById("adbox");
-    adbox.innerHTML = `<script src="https://ad.gigapub.tech/script?id=919"></script>`;
-    setTimeout(() => {
+    adbox.innerHTML = '<script src="https://ad.gigapub.tech/script?id=919"><\/script>';
+    setTimeout(function() {
       balance += 10;
       ads += 1;
       saveData();
@@ -107,11 +114,11 @@
   }
 
   function showTasks() {
-    document.getElementById("taskList").innerHTML = `
-      <div><b>Task 1:</b> Subscribe to channel. <button onclick="submitTask()">Submit</button></div><br>
-      <div><b>Task 2:</b> Join group. <button onclick="submitTask()">Submit</button></div><br>
-      <div><b>Task 3:</b> Like a video. <button onclick="submitTask()">Submit</button></div>
-    `;
+    var html = "";
+    html += "<div><b>Task 1:</b> Subscribe to channel. <button onclick='submitTask()'>Submit</button></div><br>";
+    html += "<div><b>Task 2:</b> Join group. <button onclick='submitTask()'>Submit</button></div><br>";
+    html += "<div><b>Task 3:</b> Like a video. <button onclick='submitTask()'>Submit</button></div>";
+    document.getElementById("taskList").innerHTML = html;
   }
 
   function submitTask() {
@@ -136,14 +143,8 @@
     updateUI();
   }
 
-  function saveData() {
-    localStorage.setItem("balance", balance);
-    localStorage.setItem("withdraw", withdraw);
-    localStorage.setItem("tasks", tasks);
-    localStorage.setItem("ads", ads);
-  }
-
   window.onload = updateUI;
 </script>
+
 </body>
 </html>

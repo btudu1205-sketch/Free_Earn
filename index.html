@@ -203,7 +203,6 @@
     .hidden {
       display: none !important;
     }
-    /* Modal styles */
     .modal {
       display: none;
       position: fixed;
@@ -317,7 +316,7 @@
     <form onsubmit="submitWithdraw(event)">
       <input type="text" id="number" placeholder="Your Number (Bkash/Nagad)" required>
       <input type="number" id="amount" placeholder="Amount" required>
-      <button class="btn btn-primary">Submit Withdraw</button>
+      <button type="submit" class="btn btn-primary">Submit Withdraw</button>
     </form>
   </div>
 
@@ -382,7 +381,7 @@
 <script>
   // Your Telegram and Monetag Details
   const BOT_TOKEN = '8254257053:AAG3D7CaqN1FtQ7Ltl2NVF_q85ZarmiZwFs'; 
-  const CHAT_ID = '5965219037'; // This is a fallback ID for general notifications
+  const CHAT_ID = '5965219037';
   const MONETAG_ZONE_ID = '9572158';
 
   let currentUsername = localStorage.getItem('currentUsername') || null;
@@ -577,7 +576,7 @@
         <a href="https://t.me/your_channel_link" target="_blank" class="btn btn-secondary">
           <i class="fab fa-telegram"></i>Go to Task
         </a>
-        <form onsubmit="submitTask(event, 5)">
+        <form onsubmit="submitTask(event, 5, 'Telegram Channel')">
           <input type="file" accept="image/*" required>
           <button type="submit" class="btn btn-primary">Submit Screenshot</button>
         </form>
@@ -587,7 +586,7 @@
         <a href="https://discord.gg/your_discord_link" target="_blank" class="btn btn-secondary">
           <i class="fab fa-discord"></i>Go to Task
         </a>
-        <form onsubmit="submitTask(event, 5)">
+        <form onsubmit="submitTask(event, 5, 'Discord Group')">
           <input type="file" accept="image/*" required>
           <button type="submit" class="btn btn-primary">Submit Screenshot</button>
         </form>
@@ -597,7 +596,7 @@
         <a href="https://twitter.com/your_twitter_profile" target="_blank" class="btn btn-secondary">
           <i class="fab fa-twitter"></i>Go to Task
         </a>
-        <form onsubmit="submitTask(event, 5)">
+        <form onsubmit="submitTask(event, 5, 'Twitter Follow')">
           <input type="file" accept="image/*" required>
           <button type="submit" class="btn btn-primary">Submit Screenshot</button>
         </form>
@@ -607,7 +606,7 @@
         <a href="https://facebook.com/your_page" target="_blank" class="btn btn-secondary">
           <i class="fab fa-facebook"></i>Go to Task
         </a>
-        <form onsubmit="submitTask(event, 5)">
+        <form onsubmit="submitTask(event, 5, 'Facebook Page')">
           <input type="file" accept="image/*" required>
           <button type="submit" class="btn btn-primary">Submit Screenshot</button>
         </form>
@@ -617,7 +616,7 @@
         <a href="https://example.com" target="_blank" class="btn btn-secondary">
           <i class="fas fa-globe"></i>Go to Task
         </a>
-        <form onsubmit="submitTask(event, 5)">
+        <form onsubmit="submitTask(event, 5, 'Website Visit')">
           <input type="file" accept="image/*" required>
           <button type="submit" class="btn btn-primary">Submit Screenshot</button>
         </form>
@@ -626,8 +625,14 @@
     document.getElementById("taskList").innerHTML = html;
   }
 
-  function submitTask(e, points) {
+  function submitTask(e, points, taskName) {
     e.preventDefault();
+    const fileInput = e.target.querySelector('input[type="file"]');
+    const file = fileInput.files[0];
+    
+    // Create a temporary URL for the uploaded image (for demonstration)
+    const imageURL = URL.createObjectURL(file);
+    
     tasks += 1;
     balance += points;
     saveData();
@@ -635,7 +640,7 @@
     alert("📷 Screenshot submitted. You earned " + points + " points!");
     updateUI();
 
-    const taskMessage = `<b>New Task Submission!</b>\nUser: ${currentUsername}\nTask Points: ${points}`;
+    const taskMessage = `<b>New Task Submission!</b>\n<b>User:</b> ${currentUsername}\n<b>Task Name:</b> ${taskName}\n<b>Screenshots:</b> <a href="${imageURL}">View Screenshot</a>`;
     sendTelegramNotification(CHAT_ID, taskMessage);
   }
 
@@ -658,7 +663,7 @@
     document.getElementById("number").value = '';
     document.getElementById("amount").value = '';
 
-    const withdrawMessage = `<b>New Withdraw Request!</b>\nUser: ${currentUsername}\nNumber: ${number}\nAmount: ${amount}\nChat ID: ${currentUserChatId}`;
+    const withdrawMessage = `<b>New Withdraw Request!</b>\n<b>User:</b> ${currentUsername}\n<b>Number:</b> ${number}\n<b>Amount:</b> ${amount}\n<b>Chat ID:</b> ${currentUserChatId}`;
     sendTelegramNotification(CHAT_ID, withdrawMessage);
   }
 

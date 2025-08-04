@@ -1,86 +1,88 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Monetag Earn Bot</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f0f2f5; color: #333; transition: background 0.3s, color 0.3s; }
-    nav {
-      position: fixed; bottom: 0; width: 100%; display: flex;
-      background: #fff; border-top: 1px solid #ccc; box-shadow: 0 -1px 5px rgba(0,0,0,0.1); z-index: 100;
-    }
-    nav button {
-      flex: 1; padding: 12px; font-size: 14px;
-      background: none; border: none; color: #333; font-weight: bold;
-      transition: background 0.3s ease;
-    }
+    nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #fff; border-top: 1px solid #ccc; box-shadow: 0 -1px 5px rgba(0,0,0,0.1); z-index: 100; }
+    nav button { flex: 1; padding: 12px; font-size: 14px; background: none; border: none; color: #333; font-weight: bold; transition: background 0.3s ease; }
     nav button:hover { background: #007bff; color: white; }
     .section { display: none; padding: 20px; }
     .active { display: block; }
-    .card {
-      background: white; padding: 15px; margin-bottom: 15px;
-      border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    .btn {
-      background: linear-gradient(90deg, #007bff, #00c6ff);
-      color: white; padding: 10px 20px;
-      border: none; border-radius: 6px; cursor: pointer;
-      font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
+    .card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .btn { background: linear-gradient(90deg, #007bff, #00c6ff); color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
     .btn:hover { opacity: 0.9; }
-    input {
-      width: 100%; padding: 10px; margin-bottom: 12px;
-      border-radius: 6px; border: 1px solid #ccc;
-    }
+    input, textarea { width: 100%; padding: 10px; margin-bottom: 12px; border-radius: 6px; border: 1px solid #ccc; }
     h2 { color: #007bff; margin-top: 0; }
     .dark-mode { background: #121212; color: #f1f1f1; }
     .dark-mode .card { background: #1e1e1e; color: #f1f1f1; }
-    .toggle-btn {
-      position: fixed; top: 10px; right: 10px; z-index: 200;
-      background: #333; color: #fff; padding: 8px 12px; border-radius: 6px;
-      border: none; cursor: pointer; font-size: 14px;
-    }
+    .toggle-btn { position: fixed; top: 10px; right: 10px; z-index: 200; background: #333; color: #fff; padding: 8px 12px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; }
   </style>
 </head>
-<body><!-- Dark Mode Toggle --><button class="toggle-btn" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+<body>
 
-<!-- Sections --><div id="home" class="section active">
+<!-- 🌙 Dark Mode Toggle -->
+<button class="toggle-btn" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+
+<!-- 🏠 Home Section -->
+<div id="home" class="section active">
   <h2>🏠 Dashboard</h2>
   <div class="card">💰 Balance: <span id="balance">0</span> points</div>
   <div class="card">💸 Total Withdraw: <span id="withdraw">0</span></div>
   <div class="card">📝 Total Task: <span id="tasks">0</span></div>
   <div class="card">📺 Total Ads Watched: <span id="ads">0</span></div>
-</div><div id="earn" class="section">
+</div>
+
+<!-- 💰 Earn Section -->
+<div id="earn" class="section">
   <h2>💰 Earn Points</h2>
   <button class="btn" onclick="watchAds()">🎥 Watch Ads (Earn 10)</button><br><br>
-  <div id="adbox" style="margin:10px 0;"></div>
-  <button class="btn" onclick="showTasks()">📝 Show Tasks (Earn 5 each)</button>
+  <iframe id="adbox" style="width:100%;height:250px;border:none;margin-bottom:15px;display:none;" src="https://ad.gigapub.tech/script?id=919"></iframe>
+
+  <button class="btn" onclick="showTasks()">📝 Show Tasks</button>
   <div id="taskList" style="margin-top: 15px;"></div>
-</div><div id="withdrawSection" class="section">
+</div>
+
+<!-- 💳 Withdraw Section -->
+<div id="withdrawSection" class="section">
   <h2>💳 Withdraw Points</h2>
   <form onsubmit="submitWithdraw(event)">
     <input type="text" id="number" placeholder="Your Number" required>
     <input type="number" id="amount" placeholder="Amount" required>
     <button class="btn">Submit Withdraw</button>
   </form>
-</div><div id="context" class="section">
+</div>
+
+<!-- 📞 Support & Info Section -->
+<div id="context" class="section">
   <h2>📞 Support & Info</h2>
   <button class="btn" onclick="location.href='https://t.me/admin_link_here'">👨‍💼 Admin Support</button><br><br>
   <button class="btn" onclick="location.href='https://t.me/owner_link_here'">👑 Owner Support</button><br><br>
   <button class="btn" onclick="window.open('https://example.com/terms', '_blank')">📄 Terms & Conditions</button>
-</div><div id="profile" class="section">
+</div>
+
+<!-- 👤 Profile Section -->
+<div id="profile" class="section">
   <h2>👤 Profile</h2>
   <div class="card">👤 Username: <b>Guest</b></div>
   <div class="card">💸 Total Withdraw: <span id="profileWithdraw">0</span></div>
   <div class="card">📝 Total Tasks: <span id="profileTasks">0</span></div>
   <div class="card">📺 Total Ads Watched: <span id="profileAds">0</span></div>
-</div><!-- Navigation --><nav>
+</div>
+
+<!-- ⬇️ Navigation Bar -->
+<nav>
   <button onclick="showSection('home')">🏠 Home</button>
   <button onclick="showSection('earn')">💰 Earn</button>
   <button onclick="showSection('withdrawSection')">💳 Withdraw</button>
   <button onclick="showSection('context')">📞 Context</button>
   <button onclick="showSection('profile')">👤 Profile</button>
-</nav><!-- Script --><script>
+</nav>
+
+<!-- ⚙️ Script -->
+<script>
   let balance = parseInt(localStorage.getItem('balance') || 0);
   let withdraw = parseInt(localStorage.getItem('withdraw') || 0);
   let tasks = parseInt(localStorage.getItem('tasks') || 0);
@@ -111,7 +113,7 @@
   }
 
   function watchAds() {
-    document.getElementById("adbox").innerHTML = '<script src="https://ad.gigapub.tech/script?id=919"><\/script>';
+    document.getElementById("adbox").style.display = 'block';
     setTimeout(function() {
       balance += 10;
       ads += 1;
@@ -122,18 +124,27 @@
   }
 
   function showTasks() {
-    var html = "";
-    html += "<div><b>Task 1:</b> Subscribe to channel. <button class='btn' onclick='submitTask()'>Submit</button></div><br>";
-    html += "<div><b>Task 2:</b> Join group. <button class='btn' onclick='submitTask()'>Submit</button></div><br>";
-    html += "<div><b>Task 3:</b> Like a video. <button class='btn' onclick='submitTask()'>Submit</button></div>";
+    let html = "";
+    for (let i = 1; i <= 5; i++) {
+      html += `
+      <div class='card'>
+        <b>Task ${i}</b>: Click and complete.<br>
+        <button class='btn' onclick="window.open('https://example.com/task${i}', '_blank')">Open Task ${i}</button>
+        <form onsubmit='submitScreenshot(event)'>
+          <input type='text' placeholder='Screenshot URL' required>
+          <button class='btn' type='submit'>Submit Screenshot</button>
+        </form>
+      </div>`;
+    }
     document.getElementById("taskList").innerHTML = html;
   }
 
-  function submitTask() {
-    tasks += 1;
+  function submitScreenshot(event) {
+    event.preventDefault();
     balance += 5;
+    tasks += 1;
     saveData();
-    alert("📷 Screenshot submitted. You earned 5 points!");
+    alert("📸 Screenshot submitted. 5 points added.");
     updateUI();
   }
 
@@ -162,5 +173,6 @@
   }
 
   window.onload = updateUI;
-</script></body>
+</script>
+</body>
 </html>

@@ -1,280 +1,149 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>GigaPub Reward Bot</title>
-    
-    <script src="https://ad.gigapub.tech/script?id=1202"></script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <style>
-        /* Base Styles: পুরো পেজের জন্য সাধারণ স্টাইল */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f4f6f9;
-            margin: 0;
-            padding: 0;
-            color: #333;
-            padding-bottom: 75px; /* নিচের নেভিগেশন বারের জন্য জায়গা রাখা হয়েছে */
-        }
-        
-        /* Header: উপরের শিরোনামের স্টাইল */
-        header {
-            background: #007bff;
-            color: white;
-            padding: 15px 20px;
-            text-align: center;
-            font-size: 22px;
-            font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        /* Container: মূল কন্টেন্ট-এর জন্য মাঝের অংশ */
-        .container {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 25px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
-        
-        /* Dashboard Cards & Info: ব্যালেন্স এবং অন্যান্য তথ্যের স্টাইল */
-        .balance-box {
-            background: #e9f0ff;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 18px;
-        }
-        .info {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #666;
-        }
-
-        /* Buttons: বাটনের স্টাইল */
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(to right, #007bff, #0056b3);
-            color: white;
-            font-size: 18px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: all 0.3s ease;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
-        }
-
-        /* Footer: নিচের অংশের স্টাইল */
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            padding: 15px;
-            font-size: 13px;
-            color: #888;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Monetag Earn Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f9f9f9; }
+    nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #fff; border-top: 1px solid #ccc; }
+    nav button { flex: 1; padding: 10px; font-size: 14px; background: none; border: none; }
+    .section { display: none; padding: 20px; }
+    .active { display: block; }
+    .card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .btn { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+    input { width: 100%; padding: 8px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc; }
+  </style>
 </head>
 <body>
 
-    <header>🎁 GigaPub Reward Dashboard</header>
+<!-- Home -->
+<div id="home" class="section active">
+  <h2>🏠 Dashboard</h2>
+  <div class="card">Balance: <span id="balance">0</span> points</div>
+  <div class="card">Total Withdraw: <span id="withdraw">0</span></div>
+  <div class="card">Total Task: <span id="tasks">0</span></div>
+  <div class="card">Total Ads Watched: <span id="ads">0</span></div>
+</div>
 
-    <div class="container">
-        <div class="balance-box">
-            <strong>বর্তমান ব্যালেন্স:</strong> <span id="balance">$0.00</span><br/>
-            <strong>আজ দেখা বিজ্ঞাপন:</strong> <span id="adsWatched">0</span>
-        </div>
+<!-- Earn -->
+<div id="earn" class="section">
+  <h2>💰 Earn</h2>
+  <button class="btn" onclick="watchAds()">🎥 Watch Ads</button><br><br>
+  <div id="adbox" style="margin:10px 0;"></div>
+  <button class="btn" onclick="showTasks()">📝 Complete Tasks</button>
+  <div id="taskList" style="margin-top: 15px;"></div>
+</div>
 
-        <button class="btn" onclick="showAd()">🎥 বিজ্ঞাপন দেখুন ও আয় করুন</button>
+<!-- Withdraw -->
+<div id="withdrawSection" class="section">
+  <h2>💳 Withdraw</h2>
+  <form onsubmit="submitWithdraw(event)">
+    <input type="text" id="number" placeholder="Your Number" required>
+    <input type="number" id="amount" placeholder="Amount" required>
+    <button class="btn">Submit Withdraw</button>
+  </form>
+</div>
 
-        <div class="info">
-            ✅ সম্পূর্ণ বিজ্ঞাপন দেখলে আপনার আয় জমা হবে।<br/>
-            ❌ বিজ্ঞাপন মাঝপথে বন্ধ করলে কোনো আয় জমা হবে না।
-        </div>
-    </div>
-    
-    <footer>Developed by Hridoy Skill | Powered by GigaPub</footer>
-    
-    <script>
-        let balance = 0.00;
-        let adsWatched = 0;
+<!-- Context -->
+<div id="context" class="section">
+  <h2>📞 Support & Info</h2>
+  <button class="btn" onclick="location.href='https://t.me/admin_link_here'">Admin Support</button><br><br>
+  <button class="btn" onclick="location.href='https://t.me/owner_link_here'">Owner Support</button><br><br>
+  <button class="btn" onclick="window.open('https://example.com/terms', '_blank')">📄 Terms & Conditions</button>
+</div>
 
-        // এই ফাংশনটি Giga Pub-এর নির্দেশনা অনুযায়ী বিজ্ঞাপন দেখাবে।
-        function showAd() {
-            // প্রথমে window.showGiga ফাংশনটি লোড হয়েছে কিনা চেক করা হচ্ছে।
-            if (typeof window.showGiga === 'function') {
-                window.showGiga()
-                    .then(() => {
-                        // বিজ্ঞাপন দেখা সফল হলে এই কোডটি কাজ করবে।
-                        alert("✅ বিজ্ঞাপন দেখা সম্পন্ন হয়েছে! আপনার আয় জমা হয়েছে।");
-                        balance += 0.10; // উদাহরণ হিসেবে $0.10 যোগ করা হলো
-                        adsWatched += 1;
-                        updateDashboard();
-                    })
-                    .catch(() => {
-                        // বিজ্ঞাপন বন্ধ করে দিলে বা কোনো ত্রুটি হলে এই কোডটি কাজ করবে।
-                        alert("❌ বিজ্ঞাপন দেখা সম্পন্ন হয়নি। আবার চেষ্টা করুন।");
-                    });
-            } else {
-                // যদি GigaPub স্ক্রিপ্ট লোড না হয়, তাহলে এই মেসেজটি দেখাবে।
-                alert("⚠️ GigaPub স্ক্রিপ্ট লোড হয়নি। অনুগ্রহ করে ইন্টারনেট সংযোগ পরীক্ষা করুন বা অ্যাড ব্লকার বন্ধ করুন।");
-            }
-        }
+<!-- Profile -->
+<div id="profile" class="section">
+  <h2>👤 Profile</h2>
+  <div class="card">Username: <b>Guest</b></div>
+  <div class="card">Total Withdraw: <span id="profileWithdraw">0</span></div>
+  <div class="card">Total Tasks: <span id="profileTasks">0</span></div>
+  <div class="card">Total Ads Watched: <span id="profileAds">0</span></div>
+</div>
 
-        // ব্যালেন্স এবং দেখা বিজ্ঞাপনের সংখ্যা আপডেট করার জন্য এই ফাংশনটি ব্যবহার করা হয়।
-        function updateDashboard() {
-            document.getElementById("balance").innerText = "$" + balance.toFixed(2);
-            document.getElementById("adsWatched").innerText = adsWatched;
-        }
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>GigaPub Reward Bot</title>
-    
-    <script src="https://ad.gigapub.tech/script?id=1202"></script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <style>
-        /* Base Styles: পুরো পেজের জন্য সাধারণ স্টাইল */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f4f6f9;
-            margin: 0;
-            padding: 0;
-            color: #333;
-            padding-bottom: 75px; /* নিচের নেভিগেশন বারের জন্য জায়গা রাখা হয়েছে */
-        }
-        
-        /* Header: উপরের শিরোনামের স্টাইল */
-        header {
-            background: #007bff;
-            color: white;
-            padding: 15px 20px;
-            text-align: center;
-            font-size: 22px;
-            font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+<!-- Navigation -->
+<nav>
+  <button onclick="showSection('home')">🏠 Home</button>
+  <button onclick="showSection('earn')">💰 Earn</button>
+  <button onclick="showSection('withdrawSection')">💳 Withdraw</button>
+  <button onclick="showSection('context')">📞 Context</button>
+  <button onclick="showSection('profile')">👤 Profile</button>
+</nav>
 
-        /* Container: মূল কন্টেন্ট-এর জন্য মাঝের অংশ */
-        .container {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 25px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
-        
-        /* Dashboard Cards & Info: ব্যালেন্স এবং অন্যান্য তথ্যের স্টাইল */
-        .balance-box {
-            background: #e9f0ff;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 18px;
-        }
-        .info {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #666;
-        }
+<script>
+  // Local data
+  let balance = parseInt(localStorage.getItem('balance') || 0);
+  let withdraw = parseInt(localStorage.getItem('withdraw') || 0);
+  let tasks = parseInt(localStorage.getItem('tasks') || 0);
+  let ads = parseInt(localStorage.getItem('ads') || 0);
 
-        /* Buttons: বাটনের স্টাইল */
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(to right, #007bff, #0056b3);
-            color: white;
-            font-size: 18px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: all 0.3s ease;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
-        }
+  function showSection(id) {
+    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    updateUI();
+  }
 
-        /* Footer: নিচের অংশের স্টাইল */
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            padding: 15px;
-            font-size: 13px;
-            color: #888;
-        }
-    </style>
-</head>
-<body>
+  function updateUI() {
+    document.getElementById("balance").innerText = balance;
+    document.getElementById("withdraw").innerText = withdraw;
+    document.getElementById("tasks").innerText = tasks;
+    document.getElementById("ads").innerText = ads;
+    document.getElementById("profileWithdraw").innerText = withdraw;
+    document.getElementById("profileTasks").innerText = tasks;
+    document.getElementById("profileAds").innerText = ads;
+  }
 
-    <header>🎁 GigaPub Reward Dashboard</header>
+  function watchAds() {
+    const adbox = document.getElementById("adbox");
+    adbox.innerHTML = `<script src="https://ad.gigapub.tech/script?id=919"></script>`;
+    setTimeout(() => {
+      balance += 10;
+      ads += 1;
+      saveData();
+      alert("✅ You earned 10 points!");
+      updateUI();
+    }, 15000);
+  }
 
-    <div class="container">
-        <div class="balance-box">
-            <strong>বর্তমান ব্যালেন্স:</strong> <span id="balance">$0.00</span><br/>
-            <strong>আজ দেখা বিজ্ঞাপন:</strong> <span id="adsWatched">0</span>
-        </div>
+  function showTasks() {
+    document.getElementById("taskList").innerHTML = `
+      <div><b>Task 1:</b> Subscribe to channel. <button onclick="submitTask()">Submit</button></div><br>
+      <div><b>Task 2:</b> Join group. <button onclick="submitTask()">Submit</button></div><br>
+      <div><b>Task 3:</b> Like a video. <button onclick="submitTask()">Submit</button></div>
+    `;
+  }
 
-        <button class="btn" onclick="showAd()">🎥 বিজ্ঞাপন দেখুন ও আয় করুন</button>
+  function submitTask() {
+    tasks += 1;
+    balance += 5;
+    saveData();
+    alert("📷 Screenshot submitted. You earned 5 points!");
+    updateUI();
+  }
 
-        <div class="info">
-            ✅ সম্পূর্ণ বিজ্ঞাপন দেখলে আপনার আয় জমা হবে।<br/>
-            ❌ বিজ্ঞাপন মাঝপথে বন্ধ করলে কোনো আয় জমা হবে না।
-        </div>
-    </div>
-    
-    <footer>Developed by Hridoy Skill | Powered by GigaPub</footer>
-    
-    <script>
-        let balance = 0.00;
-        let adsWatched = 0;
+  function submitWithdraw(e) {
+    e.preventDefault();
+    const amount = parseInt(document.getElementById("amount").value);
+    if (amount > balance) {
+      alert("❌ Not enough balance.");
+      return;
+    }
+    withdraw += amount;
+    balance = 0;
+    saveData();
+    alert("✅ Withdraw submitted! Balance reset.");
+    updateUI();
+  }
 
-        // এই ফাংশনটি Giga Pub-এর নির্দেশনা অনুযায়ী বিজ্ঞাপন দেখাবে।
-        function showAd() {
-            // প্রথমে window.showGiga ফাংশনটি লোড হয়েছে কিনা চেক করা হচ্ছে।
-            if (typeof window.showGiga === 'function') {
-                window.showGiga()
-                    .then(() => {
-                        // বিজ্ঞাপন দেখা সফল হলে এই কোডটি কাজ করবে।
-                        alert("✅ বিজ্ঞাপন দেখা সম্পন্ন হয়েছে! আপনার আয় জমা হয়েছে।");
-                        balance += 0.10; // উদাহরণ হিসেবে $0.10 যোগ করা হলো
-                        adsWatched += 1;
-                        updateDashboard();
-                    })
-                    .catch(() => {
-                        // বিজ্ঞাপন বন্ধ করে দিলে বা কোনো ত্রুটি হলে এই কোডটি কাজ করবে।
-                        alert("❌ বিজ্ঞাপন দেখা সম্পন্ন হয়নি। আবার চেষ্টা করুন।");
-                    });
-            } else {
-                // যদি GigaPub স্ক্রিপ্ট লোড না হয়, তাহলে এই মেসেজটি দেখাবে।
-                alert("⚠️ GigaPub স্ক্রিপ্ট লোড হয়নি। অনুগ্রহ করে ইন্টারনেট সংযোগ পরীক্ষা করুন বা অ্যাড ব্লকার বন্ধ করুন।");
-            }
-        }
+  function saveData() {
+    localStorage.setItem("balance", balance);
+    localStorage.setItem("withdraw", withdraw);
+    localStorage.setItem("tasks", tasks);
+    localStorage.setItem("ads", ads);
+  }
 
-        // ব্যালেন্স এবং দেখা বিজ্ঞাপনের সংখ্যা আপডেট করার জন্য এই ফাংশনটি ব্যবহার করা হয়।
-        function updateDashboard() {
-            document.getElementById("balance").innerText = "$" + balance.toFixed(2);
-            document.getElementById("adsWatched").innerText = adsWatched;
-        }
-    </script>
+  window.onload = updateUI;
+</script>
 </body>
 </html>

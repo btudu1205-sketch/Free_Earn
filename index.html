@@ -402,6 +402,29 @@
       });
   }
 
+  function sendTelegramImageNotification(chatId, imageFile, caption) {
+    const formData = new FormData();
+    formData.append('chat_id', chatId);
+    formData.append('photo', imageFile);
+    formData.append('caption', caption);
+
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`;
+
+    fetch(url, {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (!data.ok) {
+        console.error("Failed to send image:", data.description);
+      }
+    })
+    .catch(error => {
+      console.error("Error sending image:", error);
+    });
+  }
+
   // Modal functions
   function showModal() {
     document.getElementById('verificationModal').style.display = 'block';
@@ -470,7 +493,6 @@
       alert("✅ Registration successful! Please log in.");
       closeModal();
       showLogin();
-      // Clear temp data
       verificationCode = null;
       tempUserData = {};
       document.getElementById('verificationCodeInput').value = '';
@@ -630,9 +652,6 @@
     const fileInput = e.target.querySelector('input[type="file"]');
     const file = fileInput.files[0];
     
-    // Create a temporary URL for the uploaded image (for demonstration)
-    const imageURL = URL.createObjectURL(file);
-    
     tasks += 1;
     balance += points;
     saveData();
@@ -640,8 +659,8 @@
     alert("📷 Screenshot submitted. You earned " + points + " points!");
     updateUI();
 
-    const taskMessage = `<b>New Task Submission!</b>\n<b>User:</b> ${currentUsername}\n<b>Task Name:</b> ${taskName}\n<b>Screenshots:</b> <a href="${imageURL}">View Screenshot</a>`;
-    sendTelegramNotification(CHAT_ID, taskMessage);
+    const caption = `<b>New Task Submission!</b>\n<b>User:</b> ${currentUsername}\n<b>Task Name:</b> ${taskName}`;
+    sendTelegramImageNotification(CHAT_ID, file, caption);
   }
 
   function submitWithdraw(e) {

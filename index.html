@@ -35,7 +35,7 @@
       max-width: 500px;
       left: 50%;
       transform: translateX(-50%);
-      display: none; /* Initially hidden */
+      display: none;
       justify-content: space-around;
       background: var(--card-bg);
       border-top: 1px solid #e0e0e0;
@@ -203,6 +203,46 @@
     .hidden {
       display: none !important;
     }
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1001;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+      padding-top: 60px;
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 350px;
+      border-radius: var(--border-radius);
+      text-align: center;
+    }
+    .close-btn {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .close-btn:hover, .close-btn:focus {
+      color: black;
+      text-decoration: none;
+    }
+    .modal-content input {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 20px;
+      letter-spacing: 5px;
+    }
   </style>
 </head>
 <body>
@@ -228,6 +268,18 @@
         </form>
         <p>Don't have an account? <a href="#" onclick="showRegister()">Register here</a></p>
     </div>
+</div>
+
+<div id="verificationModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeModal()">&times;</span>
+    <h2>Enter Verification Code</h2>
+    <p>We've sent a 4-digit code to your Telegram.</p>
+    <form onsubmit="verifyCode(event)">
+      <input type="text" id="verificationCodeInput" maxlength="4" required>
+      <button type="submit" class="btn btn-primary">Verify</button>
+    </form>
+  </div>
 </div>
 
 <div id="mainApp" class="container hidden">
@@ -334,6 +386,8 @@
   const MONETAG_ZONE_ID = '9572158';
 
   let currentUsername = localStorage.getItem('currentUsername') || null;
+  let verificationCode = null;
+  let tempUserData = {};
 
   function sendTelegramNotification(chatId, message) {
     const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}&parse_mode=HTML`;
@@ -347,6 +401,14 @@
       .catch(error => {
         console.error("Error sending Telegram message:", error);
       });
+  }
+
+  // Modal functions
+  function showModal() {
+    document.getElementById('verificationModal').style.display = 'block';
+  }
+  function closeModal() {
+    document.getElementById('verificationModal').style.display = 'none';
   }
 
   // Authentication Logic
@@ -383,25 +445,36 @@
       alert("❌ This username is already taken!");
       return;
     }
-
-    const verificationCode = Math.floor(1000 + Math.random() * 9000);
+    
+    verificationCode = Math.floor(1000 + Math.random() * 9000).toString();
     sendTelegramNotification(telegramChatId, `Your verification code is: <b>${verificationCode}</b>`);
     
-    const submittedCode = prompt("Please enter the verification code sent to your Telegram:");
+    tempUserData = {
+      username: username,
+      password: password,
+      chatId: telegramChatId,
+      balance: 0,
+      withdraw: 0,
+      tasks: 0,
+      ads: 0
+    };
     
-    if (submittedCode === verificationCode.toString()) {
-      const userData = {
-        username: username,
-        password: password,
-        chatId: telegramChatId,
-        balance: 0,
-        withdraw: 0,
-        tasks: 0,
-        ads: 0
-      };
-      localStorage.setItem(username, JSON.stringify(userData));
+    showModal();
+  }
+  
+  function verifyCode(e) {
+    e.preventDefault();
+    const submittedCode = document.getElementById('verificationCodeInput').value;
+    
+    if (submittedCode === verificationCode) {
+      localStorage.setItem(tempUserData.username, JSON.stringify(tempUserData));
       alert("✅ Registration successful! Please log in.");
+      closeModal();
       showLogin();
+      // Clear temp data
+      verificationCode = null;
+      tempUserData = {};
+      document.getElementById('verificationCodeInput').value = '';
     } else {
       alert("❌ Incorrect verification code.");
     }
@@ -563,7 +636,7 @@
     updateUI();
 
     const taskMessage = `<b>New Task Submission!</b>\nUser: ${currentUsername}\nTask Points: ${points}`;
-    sendTelegramNotification(CHAT_ID, taskMessage); // Use the global CHAT_ID for admin notifications
+    sendTelegramNotification(CHAT_ID, taskMessage);
   }
 
   function submitWithdraw(e) {
@@ -586,11 +659,10 @@
     document.getElementById("amount").value = '';
 
     const withdrawMessage = `<b>New Withdraw Request!</b>\nUser: ${currentUsername}\nNumber: ${number}\nAmount: ${amount}\nChat ID: ${currentUserChatId}`;
-    sendTelegramNotification(CHAT_ID, withdrawMessage); // Use the global CHAT_ID for admin notifications
+    sendTelegramNotification(CHAT_ID, withdrawMessage);
   }
 
   window.onload = () => {
-    // Dynamically load Monetag SDK script
     const script = document.createElement('script');
     script.src = `//libtl.com/sdk.js`;
     script.setAttribute('data-zone', MONETAG_ZONE_ID);

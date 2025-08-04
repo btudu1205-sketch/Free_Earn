@@ -4,83 +4,293 @@
   <meta charset="UTF-8" />
   <title>Monetag Earn Bot</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; background: #f9f9f9; }
-    nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #fff; border-top: 1px solid #ccc; z-index: 100; }
-    nav button { flex: 1; padding: 10px; font-size: 14px; background: none; border: none; }
-    .section { display: none; padding: 20px; }
-    .active { display: block; }
-    .card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    .btn { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
-    input { width: 100%; padding: 8px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc; }
+    :root {
+      --primary-color: #4CAF50;
+      --secondary-color: #2196F3;
+      --background-color: #f0f2f5;
+      --card-bg: #ffffff;
+      --text-color: #333333;
+      --border-radius: 12px;
+      --shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: var(--background-color);
+      color: var(--text-color);
+      padding-bottom: 70px;
+    }
+    .container {
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+    }
+    nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 500px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: space-around;
+      background: var(--card-bg);
+      border-top: 1px solid #e0e0e0;
+      z-index: 1000;
+      box-shadow: var(--shadow);
+      border-radius: 15px 15px 0 0;
+    }
+    nav button {
+      flex: 1;
+      padding: 12px 8px;
+      font-size: 10px;
+      background: none;
+      border: none;
+      color: #777;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: color 0.3s ease;
+      position: relative;
+      cursor: pointer;
+    }
+    nav button.active-nav {
+      color: var(--primary-color);
+    }
+    nav button.active-nav::after {
+      content: '';
+      position: absolute;
+      top: -1px;
+      height: 3px;
+      width: 60%;
+      background: var(--primary-color);
+      border-radius: 0 0 5px 5px;
+    }
+    nav button i {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+    .section {
+      display: none;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    .section.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .card {
+      background: var(--card-bg);
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: transform 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .card h3 {
+      margin: 0;
+      font-size: 16px;
+      color: #555;
+    }
+    .card .value {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+    .btn {
+      width: 100%;
+      padding: 15px;
+      font-size: 16px;
+      border: none;
+      border-radius: var(--border-radius);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .btn:active {
+      transform: scale(0.98);
+    }
+    .btn-primary {
+      background: var(--primary-color);
+    }
+    .btn-secondary {
+      background: var(--secondary-color);
+    }
+    .btn-admin {
+      background: #FF9800;
+    }
+    .btn-owner {
+      background: #F44336;
+    }
+    .btn-terms {
+      background: #9E9E9E;
+    }
+    input {
+      width: calc(100% - 20px);
+      padding: 12px 10px;
+      margin-bottom: 15px;
+      border-radius: var(--border-radius);
+      border: 1px solid #ddd;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+    input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+    h2 {
+      text-align: center;
+      color: #444;
+      margin-bottom: 25px;
+      font-size: 24px;
+      font-weight: 600;
+    }
+    .icon {
+      margin-right: 10px;
+    }
+    .task-item {
+      background: #e9f5e9;
+      padding: 15px;
+      border-radius: var(--border-radius);
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .task-item button {
+      padding: 8px 15px;
+      border-radius: 8px;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+    }
   </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 
-<!-- Home -->
-<div id="home" class="section active">
-  <h2>🏠 Dashboard</h2>
-  <div class="card">Balance: <span id="balance">0</span> points</div>
-  <div class="card">Total Withdraw: <span id="withdraw">0</span></div>
-  <div class="card">Total Task: <span id="tasks">0</span></div>
-  <div class="card">Total Ads Watched: <span id="ads">0</span></div>
+<div class="container">
+  <div id="home" class="section active">
+    <h2><i class="fas fa-home icon"></i>Dashboard</h2>
+    <div class="card">
+      <h3>Balance</h3>
+      <span class="value" id="balance">0</span>
+    </div>
+    <div class="card">
+      <h3>Total Withdraw</h3>
+      <span class="value" id="withdraw">0</span>
+    </div>
+    <div class="card">
+      <h3>Total Tasks</h3>
+      <span class="value" id="tasks">0</span>
+    </div>
+    <div class="card">
+      <h3>Ads Watched</h3>
+      <span class="value" id="ads">0</span>
+    </div>
+  </div>
+
+  <div id="earn" class="section">
+    <h2><i class="fas fa-dollar-sign icon"></i>Earn</h2>
+    <button class="btn btn-primary" onclick="watchAds()"><i class="fas fa-video icon"></i>Watch Ads</button>
+    <div id="adbox" style="margin:20px 0;"></div>
+    <button class="btn btn-secondary" onclick="showTasks()"><i class="fas fa-tasks icon"></i>Complete Tasks</button>
+    <div id="taskList" style="margin-top: 20px;"></div>
+  </div>
+
+  <div id="withdrawSection" class="section">
+    <h2><i class="fas fa-wallet icon"></i>Withdraw</h2>
+    <form onsubmit="submitWithdraw(event)">
+      <input type="text" id="number" placeholder="Your Number (Bkash/Nagad)" required>
+      <input type="number" id="amount" placeholder="Amount (e.g., 50)" required>
+      <button class="btn btn-primary">Submit Withdraw</button>
+    </form>
+  </div>
+
+  <div id="context" class="section">
+    <h2><i class="fas fa-headset icon"></i>Support & Info</h2>
+    <a href="https://t.me/admin_link_here" target="_blank" style="text-decoration: none;">
+      <button class="btn btn-admin"><i class="fab fa-telegram-plane icon"></i>Admin Support</button>
+    </a>
+    <a href="https://t.me/owner_link_here" target="_blank" style="text-decoration: none;">
+      <button class="btn btn-owner"><i class="fab fa-telegram-plane icon"></i>Owner Support</button>
+    </a>
+    <a href="https://example.com/terms" target="_blank" style="text-decoration: none;">
+      <button class="btn btn-terms"><i class="fas fa-file-contract icon"></i>Terms & Conditions</button>
+    </a>
+  </div>
+
+  <div id="profile" class="section">
+    <h2><i class="fas fa-user-circle icon"></i>Profile</h2>
+    <div class="card">
+      <h3>Username</h3>
+      <span class="value"><b>Guest</b></span>
+    </div>
+    <div class="card">
+      <h3>Total Withdraw</h3>
+      <span class="value" id="profileWithdraw">0</span>
+    </div>
+    <div class="card">
+      <h3>Total Tasks</h3>
+      <span class="value" id="profileTasks">0</span>
+    </div>
+    <div class="card">
+      <h3>Total Ads Watched</h3>
+      <span class="value" id="profileAds">0</span>
+    </div>
+  </div>
 </div>
 
-<!-- Earn -->
-<div id="earn" class="section">
-  <h2>💰 Earn</h2>
-  <button class="btn" onclick="watchAds()">🎥 Watch Ads</button><br><br>
-  <div id="adbox" style="margin:10px 0;"></div>
-  <button class="btn" onclick="showTasks()">📝 Complete Tasks</button>
-  <div id="taskList" style="margin-top: 15px;"></div>
-</div>
-
-<!-- Withdraw -->
-<div id="withdrawSection" class="section">
-  <h2>💳 Withdraw</h2>
-  <form onsubmit="submitWithdraw(event)">
-    <input type="text" id="number" placeholder="Your Number" required>
-    <input type="number" id="amount" placeholder="Amount" required>
-    <button class="btn">Submit Withdraw</button>
-  </form>
-</div>
-
-<!-- Context -->
-<div id="context" class="section">
-  <h2>📞 Support & Info</h2>
-  <button class="btn" onclick="location.href='https://t.me/admin_link_here'">Admin Support</button><br><br>
-  <button class="btn" onclick="location.href='https://t.me/owner_link_here'">Owner Support</button><br><br>
-  <button class="btn" onclick="window.open('https://example.com/terms', '_blank')">📄 Terms & Conditions</button>
-</div>
-
-<!-- Profile -->
-<div id="profile" class="section">
-  <h2>👤 Profile</h2>
-  <div class="card">Username: <b>Guest</b></div>
-  <div class="card">Total Withdraw: <span id="profileWithdraw">0</span></div>
-  <div class="card">Total Tasks: <span id="profileTasks">0</span></div>
-  <div class="card">Total Ads Watched: <span id="profileAds">0</span></div>
-</div>
-
-<!-- Navigation -->
 <nav>
-  <button onclick="showSection('home')">🏠 Home</button>
-  <button onclick="showSection('earn')">💰 Earn</button>
-  <button onclick="showSection('withdrawSection')">💳 Withdraw</button>
-  <button onclick="showSection('context')">📞 Context</button>
-  <button onclick="showSection('profile')">👤 Profile</button>
+  <button onclick="showSection('home', this)" class="active-nav">
+    <i class="fas fa-home"></i>
+    <span>Home</span>
+  </button>
+  <button onclick="showSection('earn', this)">
+    <i class="fas fa-dollar-sign"></i>
+    <span>Earn</span>
+  </button>
+  <button onclick="showSection('withdrawSection', this)">
+    <i class="fas fa-wallet"></i>
+    <span>Withdraw</span>
+  </button>
+  <button onclick="showSection('context', this)">
+    <i class="fas fa-headset"></i>
+    <span>Support</span>
+  </button>
+  <button onclick="showSection('profile', this)">
+    <i class="fas fa-user-circle"></i>
+    <span>Profile</span>
+  </button>
 </nav>
 
-<!-- Scripts -->
 <script>
   let balance = parseInt(localStorage.getItem('balance') || 0);
   let withdraw = parseInt(localStorage.getItem('withdraw') || 0);
   let tasks = parseInt(localStorage.getItem('tasks') || 0);
   let ads = parseInt(localStorage.getItem('ads') || 0);
 
-  function showSection(id) {
+  function showSection(id, element) {
     document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
     document.getElementById(id).classList.add("active");
+    
+    document.querySelectorAll("nav button").forEach(btn => btn.classList.remove("active-nav"));
+    element.classList.add("active-nav");
+    
     updateUI();
   }
 
@@ -103,21 +313,32 @@
 
   function watchAds() {
     const adbox = document.getElementById("adbox");
-    adbox.innerHTML = '<script src="https://ad.gigapub.tech/script?id=919"><\/script>';
+    adbox.innerHTML = '<p style="text-align:center; color: #555;">Watching ad... please wait 15 seconds.</p><script src="https://ad.gigapub.tech/script?id=919"><\/script>';
     setTimeout(function() {
       balance += 10;
       ads += 1;
       saveData();
       alert("✅ You earned 10 points!");
       updateUI();
+      adbox.innerHTML = '';
     }, 15000);
   }
 
   function showTasks() {
-    var html = "";
-    html += "<div><b>Task 1:</b> Subscribe to channel. <button onclick='submitTask()'>Submit</button></div><br>";
-    html += "<div><b>Task 2:</b> Join group. <button onclick='submitTask()'>Submit</button></div><br>";
-    html += "<div><b>Task 3:</b> Like a video. <button onclick='submitTask()'>Submit</button></div>";
+    var html = `
+      <div class="task-item">
+        <span><b>Task 1:</b> Subscribe to channel.</span>
+        <button onclick="submitTask()">Submit</button>
+      </div>
+      <div class="task-item">
+        <span><b>Task 2:</b> Join group.</span>
+        <button onclick="submitTask()">Submit</button>
+      </div>
+      <div class="task-item">
+        <span><b>Task 3:</b> Like a video.</span>
+        <button onclick="submitTask()">Submit</button>
+      </div>
+    `;
     document.getElementById("taskList").innerHTML = html;
   }
 
@@ -141,9 +362,17 @@
     saveData();
     alert("✅ Withdraw submitted! Balance reset.");
     updateUI();
+    document.getElementById("number").value = '';
+    document.getElementById("amount").value = '';
   }
 
-  window.onload = updateUI;
+  window.onload = () => {
+    updateUI();
+    const homeButton = document.querySelector('nav button:first-child');
+    if (homeButton) {
+      showSection('home', homeButton);
+    }
+  };
 </script>
 
 </body>

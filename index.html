@@ -5,6 +5,7 @@
   <title>Monetag Earn Bot</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     :root {
       --primary-color: #4CAF50;
@@ -165,18 +166,13 @@
       padding: 15px;
       border-radius: var(--border-radius);
       margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
-    .task-item button {
-      padding: 8px 15px;
-      border-radius: 8px;
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 14px;
+    .task-item span {
+      display: block;
+      margin-bottom: 10px;
+    }
+    .task-item form {
+      margin-top: 10px;
     }
     .task-link {
         display: block;
@@ -189,7 +185,6 @@
       margin-right: 5px;
     }
   </style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 
@@ -216,7 +211,7 @@
 
   <div id="earn" class="section">
     <h2><i class="fas fa-dollar-sign icon"></i>Earn</h2>
-    <button class="btn btn-primary" onclick="watchAds()"><i class="fas fa-video icon"></i>Watch Ads</button>
+    <button class="btn btn-primary" onclick="showRewardedAd()"><i class="fas fa-video icon"></i>Watch Ads</button>
     <div id="adbox" style="margin:20px 0;"></div>
     <button class="btn btn-secondary" onclick="showTasks()"><i class="fas fa-tasks icon"></i>Complete Tasks</button>
     <div id="taskList" style="margin-top: 20px;"></div>
@@ -226,7 +221,7 @@
     <h2><i class="fas fa-wallet icon"></i>Withdraw</h2>
     <form onsubmit="submitWithdraw(event)">
       <input type="text" id="number" placeholder="Your Number (Bkash/Nagad)" required>
-      <input type="number" id="amount" placeholder="Amount (e.g., 50)" required>
+      <input type="number" id="amount" placeholder="Amount" required>
       <button class="btn btn-primary">Submit Withdraw</button>
     </form>
   </div>
@@ -289,6 +284,11 @@
 </nav>
 
 <script>
+  // Your Telegram and Monetag Details
+  const BOT_TOKEN = '8254257053:AAG3D7CaqN1FtQ7Ltl2NVF_q85ZarmiZwFs'; 
+  const CHAT_ID = '5965219037';
+  const MONETAG_ZONE_ID = '9572158';
+
   let balance = parseInt(localStorage.getItem('balance') || 0);
   let withdraw = parseInt(localStorage.getItem('withdraw') || 0);
   let tasks = parseInt(localStorage.getItem('tasks') || 0);
@@ -321,59 +321,92 @@
     localStorage.setItem("ads", ads);
   }
 
-  function watchAds() {
-    const adbox = document.getElementById("adbox");
-    adbox.innerHTML = '<p style="text-align:center; color: #555;">Watching ad... please wait 15 seconds.</p><script src="https://ad.gigapub.tech/script?id=919"><\/script>';
-    setTimeout(function() {
-      balance += 10;
-      ads += 1;
-      saveData();
-      alert("✅ You earned 10 points!");
-      updateUI();
-      adbox.innerHTML = '';
-    }, 15000);
+  // Telegram Notification Function
+  function sendTelegramNotification(message) {
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}&parse_mode=HTML`;
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        if (!data.ok) {
+          console.error("Failed to send Telegram message:", data.description);
+        }
+      })
+      .catch(error => {
+        console.error("Error sending Telegram message:", error);
+      });
+  }
+
+  // Monetag SDK integration
+  function showRewardedAd() {
+    const showAd = window[`show_${MONETAG_ZONE_ID}`];
+    if (showAd) {
+      showAd()
+        .then(() => {
+          balance += 10;
+          ads += 1;
+          saveData();
+          alert("✅ You earned 10 points!");
+          updateUI();
+        })
+        .catch(error => {
+          console.error("Ad failed to show:", error);
+          alert("❌ Ad could not be loaded. Please try again.");
+        });
+    } else {
+      alert("❌ Ad script not loaded. Please refresh the page.");
+    }
   }
 
   function showTasks() {
     var html = `
       <div class="task-item">
-        <span><b>Task 1:</b> Subscribe to Telegram Channel.</span>
-        <a href="https://t.me/your_channel_link" target="_blank" class="task-link"><i class="fab fa-telegram"></i>Go to Task</a>
+        <span><b>Task 1:</b> Subscribe to our Telegram Channel.</span>
+        <a href="https://t.me/your_channel_link" target="_blank" class="btn btn-secondary">
+          <i class="fab fa-telegram"></i>Go to Task
+        </a>
         <form onsubmit="submitTask(event, 5)">
           <input type="file" accept="image/*" required>
-          <button type="submit">Submit</button>
+          <button type="submit" class="btn btn-primary">Submit Screenshot</button>
         </form>
       </div>
       <div class="task-item">
-        <span><b>Task 2:</b> Join Discord Group.</span>
-        <a href="https://discord.gg/your_discord_link" target="_blank" class="task-link"><i class="fab fa-discord"></i>Go to Task</a>
+        <span><b>Task 2:</b> Join our Discord Group.</span>
+        <a href="https://discord.gg/your_discord_link" target="_blank" class="btn btn-secondary">
+          <i class="fab fa-discord"></i>Go to Task
+        </a>
         <form onsubmit="submitTask(event, 5)">
           <input type="file" accept="image/*" required>
-          <button type="submit">Submit</button>
+          <button type="submit" class="btn btn-primary">Submit Screenshot</button>
         </form>
       </div>
       <div class="task-item">
-        <span><b>Task 3:</b> Follow on Twitter.</span>
-        <a href="https://twitter.com/your_twitter_profile" target="_blank" class="task-link"><i class="fab fa-twitter"></i>Go to Task</a>
+        <span><b>Task 3:</b> Follow us on Twitter.</span>
+        <a href="https://twitter.com/your_twitter_profile" target="_blank" class="btn btn-secondary">
+          <i class="fab fa-twitter"></i>Go to Task
+        </a>
         <form onsubmit="submitTask(event, 5)">
           <input type="file" accept="image/*" required>
-          <button type="submit">Submit</button>
+          <button type="submit" class="btn btn-primary">Submit Screenshot</button>
         </form>
       </div>
       <div class="task-item">
-        <span><b>Task 4:</b> Like Facebook Page.</span>
-        <a href="https://facebook.com/your_page" target="_blank" class="task-link"><i class="fab fa-facebook"></i>Go to Task</a>
+        <span><b>Task 4:</b> Like our Facebook Page.</span>
+        <a href="https://facebook.com/your_page" target="_blank" class="btn btn-secondary">
+          <i class="fab fa-facebook"></i>Go to Task
+        </a>
         <form onsubmit="submitTask(event, 5)">
           <input type="file" accept="image/*" required>
-          <button type="submit">Submit</button>
+          <button type="submit" class="btn btn-primary">Submit Screenshot</button>
         </form>
       </div>
       <div class="task-item">
-        <span><b>Task 5:</b> Visit Website.</span>
-        <a href="https://example.com" target="_blank" class="task-link"><i class="fas fa-globe"></i>Go to Task</a>
+        <span><b>Task 5:</b> Visit our Website.</span>
+        <a href="https://example.com" target="_blank" class="btn btn-secondary">
+          <i class="fas fa-globe"></i>Go to Task
+        </a>
         <form onsubmit="submitTask(event, 5)">
           <input type="file" accept="image/*" required>
-          <button type="submit">Submit</button>
+          <button type="submit" class="btn btn-primary">Submit Screenshot</button>
         </form>
       </div>
     `;
@@ -385,27 +418,44 @@
     tasks += 1;
     balance += points;
     saveData();
+    
     alert("📷 Screenshot submitted. You earned " + points + " points!");
     updateUI();
+
+    const taskMessage = `<b>New Task Submission!</b>\nUser: Guest\nTask Points: ${points}`;
+    sendTelegramNotification(taskMessage);
   }
 
   function submitWithdraw(e) {
     e.preventDefault();
     const amount = parseInt(document.getElementById("amount").value);
+    const number = document.getElementById("number").value;
+    
     if (amount > balance) {
       alert("❌ Not enough balance.");
       return;
     }
+    
     withdraw += amount;
     balance -= amount;
     saveData();
+    
     alert("✅ Withdraw submitted! Remaining balance: " + balance + ".");
     updateUI();
     document.getElementById("number").value = '';
     document.getElementById("amount").value = '';
+
+    const withdrawMessage = `<b>New Withdraw Request!</b>\nUser: Guest\nNumber: ${number}\nAmount: ${amount}`;
+    sendTelegramNotification(withdrawMessage);
   }
 
   window.onload = () => {
+    const script = document.createElement('script');
+    script.src = `//libtl.com/sdk.js`;
+    script.setAttribute('data-zone', MONETAG_ZONE_ID);
+    script.setAttribute('data-sdk', `show_${MONETAG_ZONE_ID}`);
+    document.head.appendChild(script);
+
     updateUI();
     const homeButton = document.querySelector('nav button:first-child');
     if (homeButton) {
